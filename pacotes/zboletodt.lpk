@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="ZBoletoDT"/>
+    <AddToProjectUsesSection Value="True"/>
+    <Author Value="Silvio Clecio - https://github.com/silvioprog"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="..\inclusos"/>
+        <OtherUnitFiles Value="..\fontes;..\plugins\jtemplate\src"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Other>
+        <CompilerMessages>
+          <MsgFileName Value=""/>
+        </CompilerMessages>
+        <CompilerPath Value="$(CompPath)"/>
+      </Other>
+    </CompilerOptions>
+    <Description Value="ZBoleto - Gerador de boletos bancários.
+Pacote designtime."/>
+    <License Value="Por favor leia o arquivo LICENCA."/>
+    <Version Major="1"/>
+    <Files Count="1">
+      <Item1>
+        <Filename Value="..\fontes\zboletoreg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ZBoletoReg"/>
+      </Item1>
+    </Files>
+    <Type Value="RunAndDesignTime"/>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
+  </Package>
+</CONFIG>

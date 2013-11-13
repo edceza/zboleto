@@ -1,0 +1,66 @@
+object frPrinc: TfrPrinc
+  Left = 238
+  Height = 140
+  Top = 150
+  Width = 320
+  Caption = 'BoletoPHP2ZBoleto'
+  ClientHeight = 140
+  ClientWidth = 320
+  Position = poDesktopCenter
+  LCLVersion = '1.2.0.1'
+  object edModeloBP: TFileNameEdit
+    Left = 72
+    Height = 23
+    Top = 11
+    Width = 192
+    Filter = 'PHP files (*.php)|*.php'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 0
+    OnEditingDone = edModeloBPEditingDone
+  end
+  object lbModeloBP: TLabel
+    Left = 8
+    Height = 15
+    Top = 16
+    Width = 58
+    Caption = 'Modelo &BP'
+    FocusControl = edModeloBP
+    ParentColor = False
+  end
+  object lbModeloZB: TLabel
+    Left = 8
+    Height = 15
+    Top = 56
+    Width = 58
+    Caption = 'Modelo &ZB'
+    FocusControl = edModeloZB
+    ParentColor = False
+  end
+  object edModeloZB: TFileNameEdit
+    Left = 72
+    Height = 23
+    Top = 52
+    Width = 192
+    DialogKind = dkSave
+    Filter = 'ZBoleto files (*.zbl)|*.zbl'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 1
+  end
+  object btConverter: TButton
+    Left = 112
+    Height = 32
+    Top = 88
+    Width = 91
+    Caption = '&Converter'
+    OnClick = btConverterClick
+    TabOrder = 2
+  end
+end

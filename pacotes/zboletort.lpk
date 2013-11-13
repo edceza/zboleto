@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="ZBoletoRT"/>
+    <Author Value="Silvio Clecio - https://github.com/silvioprog"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="..\inclusos"/>
+        <OtherUnitFiles Value="..\fontes;..\plugins\jtemplate\src"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Other>
+        <CompilerMessages>
+          <MsgFileName Value=""/>
+        </CompilerMessages>
+        <CompilerPath Value="$(CompPath)"/>
+      </Other>
+    </CompilerOptions>
+    <Description Value="ZBoleto - Gerador de boletos bancários.
+Pacote runtime."/>
+    <License Value="Por favor leia o arquivo LICENCA."/>
+    <Version Major="1"/>
+    <Files Count="13">
+      <Item1>
+        <Filename Value="..\fontes\zboleto.pas"/>
+        <UnitName Value="ZBoleto"/>
+      </Item1>
+      <Item2>
+        <Filename Value="..\fontes\zboletoanalisadorhtml.pas"/>
+        <UnitName Value="ZBoletoAnalisadorHtml"/>
+      </Item2>
+      <Item3>
+        <Filename Value="..\fontes\zboletocodbarras.pas"/>
+        <UnitName Value="ZBoletoCodBarras"/>
+      </Item3>
+      <Item4>
+        <Filename Value="..\fontes\zboletomodelo_bb.pas"/>
+        <UnitName Value="ZBoletoModelo_BB"/>
+      </Item4>
+      <Item5>
+        <Filename Value="..\fontes\zboletomodelo_bradesco.pas"/>
+        <UnitName Value="ZBoletoModelo_Bradesco"/>
+      </Item5>
+      <Item6>
+        <Filename Value="..\fontes\zboletomodelo_cef.pas"/>
+        <UnitName Value="ZBoletoModelo_CEF"/>
+      </Item6>
+      <Item7>
+        <Filename Value="..\fontes\zboletomodelo_hsbc.pas"/>
+        <UnitName Value="ZBoletoModelo_HSBC"/>
+      </Item7>
+      <Item8>
+        <Filename Value="..\fontes\zboletomodelo_itau.pas"/>
+        <UnitName Value="ZBoletoModelo_Itau"/>
+      </Item8>
+      <Item9>
+        <Filename Value="..\fontes\zboletomodelo_real.pas"/>
+        <UnitName Value="ZBoletoModelo_Real"/>
+      </Item9>
+      <Item10>
+        <Filename Value="..\fontes\zboletomodelo_santander.pas"/>
+        <UnitName Value="ZBoletoModelo_Santander"/>
+      </Item10>
+      <Item11>
+        <Filename Value="..\fontes\zboletomodelo_sicredi.pas"/>
+        <UnitName Value="ZBoletoModelo_SICREDI"/>
+      </Item11>
+      <Item12>
+        <Filename Value="..\fontes\zboletouteis.pas"/>
+        <UnitName Value="ZBoletoUteis"/>
+      </Item12>
+      <Item13>
+        <Filename Value="..\inclusos\zboleto.inc"/>
+        <Type Value="Include"/>
+      </Item13>
+    </Files>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

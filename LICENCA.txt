@@ -1,0 +1,25 @@
+Este é o arquivo LICENCA.TXT, ele aplica-se ao projeto ZBoleto
+(https://github.com/silvioprog/zboleto), distribuído por Silvio Clecio.
+
+O código-fonte do ZBoleto é distribuído sob a LICENÇA GNU
+Lesser General Public License (consulte o arquivo LGPL.2.1.txt), com a
+seguinte alteração:
+
+Como uma exceção especial, os detentores dos direitos autorais desta
+biblioteca darão permissão para vincular esta biblioteca à módulos
+independentes para produzir um executável, independentemente dos
+termos da licença desses independentes módulos, e copiar e distribuir
+o executável resultante em termos da sua escolha, desde que também se
+enquadre, para cada módulo independente vinculado, nos termos e
+condições da licença do módulo. Um módulo independente é um módulo que
+não é derivado de ou baseado nesta biblioteca. Se você modificar esta
+biblioteca, você pode estender essa exceção para a sua versão da
+biblioteca, mas você não é obrigado a fazê-lo. Se você não quiser
+fazê-lo, apague esta declaração exceção de sua versão.
+
+Se você não recebeu uma cópia do arquivo LGPL.2.1.txt, entre em contato:
+
+      Free Software Foundation
+      51 Franklin Street, Fifth Floor,
+      Boston, MA  02110-1301
+      USA
