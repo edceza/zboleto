@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="ZBoleto : Gerador de boletos bancários." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>ZBoleto</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/silvioprog/zboleto">View on GitHub</a>
+
+          <h1 id="project_title">ZBoleto</h1>
+          <h2 id="project_tagline">Gerador de boletos bancários.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/silvioprog/zboleto/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/silvioprog/zboleto/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="introdu%C3%87%C3%83o" class="anchor" href="#introdu%C3%87%C3%83o"><span class="octicon octicon-link"></span></a>INTRODUÇÃO</h2>
+
+<p>O projeto <a href="http://silvioprog.github.io/zboleto/">ZBoleto</a> é um ótimo gerador de boletos bancários escrito para compilar em <a href="http://freepascal.org/">Free Pascal</a>.</p>
+
+<h2>
+<a name="recursos" class="anchor" href="#recursos"><span class="octicon octicon-link"></span></a>RECURSOS</h2>
+
+<ul>
+<li>
+<strong>Módulos</strong> - Cada banco possui regras e funções específicas, e estas foram implementadas em módulos ZBoleto, tornando o código desacoplado e de fácil usabilidade.</li>
+<li>
+<strong>Analisadores</strong> - O analisador é responsável por determinar o tipo do boleto gerado, permitindo a geração de boleto em HTML, PDF, DOC, ODT etc.</li>
+<li>
+<strong>Código independente da LCL</strong> - Apesar do projeto compilar no <a href="http://www.lazarus.freepascal.org">Lazarus</a>, isto não o torna dependente do mesmo, assim sendo, é possível usar o ZBoleto em aplicativos web, console e serviços.</li>
+<li>
+<strong>Suporte a vários bancos</strong> - É possível gerar boletos para os seguintes bancos: Banco do Brasil, Bradesco, Caixa Econômica Federal, HSBC, Itaú, Banco Real, Santander e SICREDI.</li>
+</ul><h2>
+<a name="licen%C3%87a" class="anchor" href="#licen%C3%87a"><span class="octicon octicon-link"></span></a>LICENÇA</h2>
+
+<p>O código fonte do ZBoleto é distribuído sob licença GNU Lesser General Public License. Veja a <a href="https://github.com/silvioprog/zboleto/blob/master/LICENCA.txt">licença do projeto</a> para detalhes de copyright/licençe.</p>
+
+<h2>
+<a name="requisitos-do-sistema" class="anchor" href="#requisitos-do-sistema"><span class="octicon octicon-link"></span></a>REQUISITOS DO SISTEMA</h2>
+
+<p>O ZBoleto requer <strong>Free Pascal 2.6.2 ou superior</strong>. Se você prefere a interface Lazarus, escolha a versão <strong>1.0.8 ou superior</strong>.</p>
+
+<h2>
+<a name="primeiros-passos" class="anchor" href="#primeiros-passos"><span class="octicon octicon-link"></span></a>PRIMEIROS PASSOS</h2>
+
+<p>Para criar um boleto com ZBoleto é muito simples. Veja no exemplo abaixo como seria a geração do boleto para o banco Bradesco:</p>
+
+<div class="highlight highlight-pascal"><pre><span class="k">program</span> <span class="n">ex_bradesco</span><span class="o">;</span>
+
+<span class="cm">{$mode objfpc}{$H+}</span>
+
+<span class="k">uses</span>
+  <span class="n">ZBoleto</span><span class="o">,</span> <span class="n">ZBoletoAnalisadorHtml</span><span class="o">,</span> <span class="n">ZBoletoModelo_Bradesco</span><span class="o">,</span> <span class="n">Classes</span><span class="o">,</span> <span class="n">SysUtils</span><span class="o">;</span>
+
+<span class="k">var</span>
+  <span class="n">Boleto</span><span class="o">:</span> <span class="n">TZBoleto</span><span class="o">;</span>
+  <span class="n">Conteudo</span><span class="o">:</span> <span class="n">TMemoryStream</span><span class="o">;</span>
+  <span class="n">DiasPrazoPagamento</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
+  <span class="n">ValorCobrado</span><span class="o">,</span> <span class="n">TaxaBoleto</span><span class="o">:</span> <span class="kt">Currency</span><span class="o">;</span>
+  <span class="n">DataVenc</span><span class="o">,</span> <span class="n">ValorBoleto</span><span class="o">,</span> <span class="n">Html</span><span class="o">:</span> <span class="k">string</span><span class="o">;</span>
+<span class="k">begin</span>
+  <span class="n">Boleto</span> <span class="o">:=</span> <span class="n">TZBoleto</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="k">nil</span><span class="p">)</span><span class="o">;</span>
+  <span class="n">Conteudo</span> <span class="o">:=</span> <span class="n">TMemoryStream</span><span class="o">.</span><span class="n">Create</span><span class="o">;</span>
+  <span class="k">try</span>
+    <span class="n">ZBoletoAnalisadorHtml</span><span class="o">.</span><span class="n">DirModelos</span> <span class="o">:=</span> <span class="s">'../../modelos/html'</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'dir_img'</span><span class="o">,</span> <span class="s">'../../imagens/'</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="c1">// DADOS DO BOLETO PARA O SEU CLIENTE</span>
+    <span class="n">DiasPrazoPagamento</span> <span class="o">:=</span> <span class="mi">5</span><span class="o">;</span>
+    <span class="n">TaxaBoleto</span> <span class="o">:=</span> <span class="mf">2.95</span><span class="o">;</span>
+    <span class="n">DataVenc</span> <span class="o">:=</span> <span class="nb">FormatDateTime</span><span class="p">(</span><span class="s">'dd/mm/yyyy'</span><span class="o">,</span> <span class="nb">Date</span> <span class="o">+</span> <span class="n">DiasPrazoPagamento</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Prazo de X dias OU informe data: '13/04/2006';</span>
+    <span class="n">ValorCobrado</span> <span class="o">:=</span> <span class="mi">2950</span><span class="o">;</span> <span class="c1">// Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal</span>
+    <span class="n">ValorBoleto</span> <span class="o">:=</span> <span class="nb">FormatFloat</span><span class="p">(</span><span class="s">'0.00'</span><span class="o">,</span> <span class="n">ValorCobrado</span> <span class="o">+</span> <span class="n">TaxaBoleto</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'nosso_numero'</span><span class="o">,</span> <span class="s">'75896452'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Nosso numero sem o DV - REGRA: Máximo de 11 caracteres!</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'numero_documento'</span><span class="o">,</span> <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="p">[</span><span class="s">'nosso_numero'</span><span class="p">]</span><span class="o">.</span><span class="n">AsString</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Num do pedido ou do documento = Nosso numero</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'data_vencimento'</span><span class="o">,</span> <span class="n">DataVenc</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'data_documento'</span><span class="o">,</span> <span class="nb">FormatDateTime</span><span class="p">(</span><span class="s">'dd/mm/yyyy'</span><span class="o">,</span> <span class="nb">Date</span><span class="p">))</span><span class="o">;</span> <span class="c1">// Data de emissão do Boleto</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'data_processamento'</span><span class="o">,</span> <span class="nb">FormatDateTime</span><span class="p">(</span><span class="s">'dd/mm/yyyy'</span><span class="o">,</span> <span class="nb">Date</span><span class="p">))</span><span class="o">;</span> <span class="c1">// Data de processamento do boleto (opcional)</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'valor_boleto'</span><span class="o">,</span> <span class="n">ValorBoleto</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula</span>
+
+    <span class="c1">// DADOS DO SEU CLIENTE</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'sacado'</span><span class="o">,</span> <span class="s">'Nome do seu Cliente'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'endereco1'</span><span class="o">,</span> <span class="s">'Endereço do seu Cliente'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'endereco2'</span><span class="o">,</span> <span class="s">'Cidade - Estado -  CEP: 00000-000'</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="c1">// INFORMACOES PARA O CLIENTE</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'demonstrativo1'</span><span class="o">,</span> <span class="s">'Pagamento de Compra na Loja Nonononono'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'demonstrativo2'</span><span class="o">,</span> <span class="s">'Mensalidade referente a nonon nonooon nononon&lt;br&gt;Taxa bancária - R$ '</span> <span class="o">+</span> <span class="nb">FormatFloat</span><span class="p">(</span><span class="s">'0.00'</span><span class="o">,</span> <span class="n">TaxaBoleto</span><span class="p">))</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'demonstrativo3'</span><span class="o">,</span> <span class="s">'ZBoleto - https://github.com/silvioprog/zboleto'</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="c1">// INSTRUÇÕES PARA O CAIXA</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'instrucoes1'</span><span class="o">,</span> <span class="s">'- Sr. Caixa, cobrar multa de 2% após o vencimento'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'instrucoes2'</span><span class="o">,</span> <span class="s">'- Receber até 10 dias após o vencimento'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'instrucoes3'</span><span class="o">,</span> <span class="s">'- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'instrucoes4'</span><span class="o">,</span> <span class="s">'&amp;nbsp; Emitido pelo sistema ZBoletoPhp - github.com/silvioprog/zboleto'</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="c1">// DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'quantidade'</span><span class="o">,</span> <span class="s">'001'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'valor_unitario'</span><span class="o">,</span> <span class="n">ValorBoleto</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'aceite'</span><span class="o">,</span> <span class="s">''</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'especie'</span><span class="o">,</span> <span class="s">'R$'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'especie_doc'</span><span class="o">,</span> <span class="s">'DS'</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="c1">// ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //</span>
+
+    <span class="c1">// DADOS DA SUA CONTA - Bradesco</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'agencia'</span><span class="o">,</span> <span class="s">'1172'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Num da agencia, sem digito</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'agencia_dv'</span><span class="o">,</span> <span class="s">'0'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Digito do Num da agencia</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'conta'</span><span class="o">,</span> <span class="s">'0403005'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Num da conta, sem digito</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'conta_dv'</span><span class="o">,</span> <span class="s">'2'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Digito do Num da conta</span>
+
+    <span class="c1">// DADOS PERSONALIZADOS - Bradesco</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'conta_cedente'</span><span class="o">,</span> <span class="s">'0403005'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// ContaCedente do Cliente, sem digito (Somente Números)</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'conta_cedente_dv'</span><span class="o">,</span> <span class="s">'2'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Digito da ContaCedente do Cliente</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'carteira'</span><span class="o">,</span> <span class="s">'06'</span><span class="p">)</span><span class="o">;</span> <span class="c1">// Código da Carteira: pode ser 06 ou 03</span>
+
+    <span class="c1">// SEUS DADOS</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'identificacao'</span><span class="o">,</span> <span class="s">'ZBoleto - Gerador de boletos bancários'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'cpf_cnpj'</span><span class="o">,</span> <span class="s">''</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'endereco'</span><span class="o">,</span> <span class="s">'Coloque o endereço da sua empresa aqui'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'cidade_uf'</span><span class="o">,</span> <span class="s">'Cidade / Estado'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Campos</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">'cedente'</span><span class="o">,</span> <span class="s">'Coloque a Razão Social da sua empresa aqui'</span><span class="p">)</span><span class="o">;</span>
+
+    <span class="n">Html</span> <span class="o">:=</span> <span class="n">Boleto</span><span class="o">.</span><span class="n">Executa</span><span class="p">(</span><span class="s">'bradesco'</span><span class="o">,</span> <span class="s">'html'</span><span class="p">)</span><span class="o">;</span>
+    <span class="n">Conteudo</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">Html</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">,</span> <span class="nb">Length</span><span class="p">(</span><span class="n">Html</span><span class="p">))</span><span class="o">;</span>
+    <span class="n">Conteudo</span><span class="o">.</span><span class="n">SaveToFile</span><span class="p">(</span><span class="s">'boleto_bradesco.html'</span><span class="p">)</span><span class="o">;</span>
+  <span class="k">finally</span>
+    <span class="n">Conteudo</span><span class="o">.</span><span class="n">Free</span><span class="o">;</span>
+    <span class="n">Boleto</span><span class="o">.</span><span class="n">Free</span><span class="o">;</span>
+  <span class="k">end</span><span class="o">;</span>
+<span class="k">end</span><span class="o">.</span>
+</pre></div>
+
+<h2>
+<a name="exemplos" class="anchor" href="#exemplos"><span class="octicon octicon-link"></span></a>EXEMPLOS</h2>
+
+<p>Se você deseja ver o ZBoleto em ação, então aprecie alguns demos online <a href="http://brookframework.org/plugins/zboleto/exemplos.html">aqui</a>.</p>
+
+<h2>
+<a name="suporte-bugs-contato" class="anchor" href="#suporte-bugs-contato"><span class="octicon octicon-link"></span></a>SUPORTE, BUGS, CONTATO</h2>
+
+<p>Por favor, use a <a href="https://github.com/silvioprog/zboleto/issues">página de issues</a>. Sua contribuição será apreciada.</p>
+
+<h2>
+<a name="baixar" class="anchor" href="#baixar"><span class="octicon octicon-link"></span></a>BAIXAR</h2>
+
+<p>Você pode baixar uma cópia atual <a href="https://github.com/silvioprog/zboleto/archive/master.zip">aqui</a>. Alternativamente, você também pode seguir repositório GIT do projeto. O endereço é:</p>
+
+<p><code>git://github.com/silvioprog/brookframework.git</code></p>
+
+<h2>
+<a name="contribuidores" class="anchor" href="#contribuidores"><span class="octicon octicon-link"></span></a>CONTRIBUIDORES</h2>
+
+<p>ZBoleto não seria possível sem a importante ajuda de contribuidores. Veja os nomes deles <a href="https://github.com/silvioprog/zboleto/blob/master/CONTRIBUIDORES.txt">aqui</a>.</p>
+
+<h2>
+<a name="doadores" class="anchor" href="#doadores"><span class="octicon octicon-link"></span></a>DOADORES</h2>
+
+<p>Faça uma doação para o projeto, é extremamente fácil, gratuito, rápido e seguro!</p>
+
+<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=GE9VT768TLP74&amp;lc=BR&amp;item_name=ZBoleto&amp;currency_code=BRL&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
+  <img src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif"></a></p>
+
+<p>Veja o nome de todos os doadores <a href="https://github.com/silvioprog/zboleto/blob/master/DOADORES.txt">aqui</a>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">ZBoleto maintained by <a href="https://github.com/silvioprog">silvioprog</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
