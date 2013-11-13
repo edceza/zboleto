@@ -56,6 +56,7 @@ type
     FValor: string;
   public
     constructor Create(AOwner: TComponent); override;
+    constructor Create(ACampos: TJSONObject; AOwner: TComponent); overload;
     class procedure Registra;
     class procedure Desregistra;
     class function NomeModelo: string; virtual;
@@ -63,7 +64,7 @@ type
     function ObtemValorCampo(const ANomeCampo: string): TJSONData;
     function GeraCodigoBanco(const ANumero: string): string; virtual;
     procedure Executa(ACampos: TJSONObject); virtual;
-    property Campos: TJSONObject read FCampos;
+    property Campos: TJSONObject read FCampos write FCampos;
     property CodigoBanco: string read FCodigoBanco write FCodigoBanco;
     property CodigoBancoComDV: string read FCodigoBancoComDV write FCodigoBancoComDV;
     property NomeBanco: string read FNomeBanco write FNomeBanco;
@@ -187,6 +188,12 @@ begin
   FDV := SZBNaoImplementado_Info;
   FCodigo := SZBNaoImplementado_Info;
   FAgenciaCodigo := SZBNaoImplementado_Info;
+end;
+
+constructor TZBoletoModeloBase.Create(ACampos: TJSONObject; AOwner: TComponent);
+begin
+  Create(AOwner);
+  FCampos := ACampos;
 end;
 
 class procedure TZBoletoModeloBase.Registra;
