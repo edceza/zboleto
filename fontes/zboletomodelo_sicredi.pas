@@ -24,7 +24,7 @@ unit ZBoletoModelo_SICREDI;
 interface
 
 uses
-  ZBoleto, ZBoletoUteis, SysUtils, FPJSON;
+  ZBoleto, ZBoletoUteis, SysUtils;
 
 type
 
@@ -52,7 +52,7 @@ type
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorCampoLivre(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa(ACampos: TJSONObject); override;
+    procedure Executa; override;
     property Posto: string read FPosto write FPosto;
     property Filler1: string read FFiller1 write FFiller1;
     property Filler2: string read FFiller2 write FFiller2;
@@ -142,9 +142,8 @@ begin
     Result := IntToStr(VDigito);
 end;
 
-procedure TZBoletoModeloSICREDI.Executa(ACampos: TJSONObject);
+procedure TZBoletoModeloSICREDI.Executa;
 begin
-  inherited;
   NomeBanco := 'SICREDI';
   CodigoBanco := '748';
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
@@ -178,11 +177,11 @@ begin
   NossoNumero := Copy(FNossoNumeroDV, 1, 2) + '/' + Copy(FNossoNumeroDV, 3, 6) +
     '-' + Copy(FNossoNumeroDV, 9, 1);
   AgenciaCodigo := Agencia + '.' + FPosto + '.' + Conta;
-  ACampos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
-  ACampos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
-  ACampos.Strings['agencia_codigo'] := AgenciaCodigo;
-  ACampos.Strings['nosso_numero'] := NossoNumero;
-  ACampos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
+  Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
+  Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
+  Campos.Strings['agencia_codigo'] := AgenciaCodigo;
+  Campos.Strings['nosso_numero'] := NossoNumero;
+  Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
 end;
 
 initialization

@@ -24,7 +24,7 @@ unit ZBoletoModelo_Bradesco;
 interface
 
 uses
-  ZBoleto, ZBoletoUteis, SysUtils, FPJSON;
+  ZBoleto, ZBoletoUteis, SysUtils;
 
 type
 
@@ -41,7 +41,7 @@ type
       const T: string = 'geral'): string;
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa(ACampos: TJSONObject); override;
+    procedure Executa; override;
     property NNum: string read FNNum write FNNum;
     property DVNossoNumero: string read FDVNossoNumero write FDVNossoNumero;
   end;
@@ -106,9 +106,8 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloBradesco.Executa(ACampos: TJSONObject);
+procedure TZBoletoModeloBradesco.Executa;
 begin
-  inherited;
   NomeBanco := 'Bradesco';
   CodigoBanco := '237';
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
@@ -136,11 +135,11 @@ begin
     FNNum + ContaCedente + '0';
   AgenciaCodigo := Agencia + '-' + ObtemValorCampo('agencia_dv').AsString +
     ' / ' + ContaCedente + '-' + ContaCedenteDV;
-  ACampos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
-  ACampos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
-  ACampos.Strings['agencia_codigo'] := AgenciaCodigo;
-  ACampos.Strings['nosso_numero'] := NossoNumero;
-  ACampos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
+  Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
+  Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
+  Campos.Strings['agencia_codigo'] := AgenciaCodigo;
+  Campos.Strings['nosso_numero'] := NossoNumero;
+  Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
 end;
 
 initialization

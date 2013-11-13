@@ -55,15 +55,14 @@ type
     FNumMoeda: string;
     FValor: string;
   public
-    constructor Create(AOwner: TComponent); override;
-    constructor Create(ACampos: TJSONObject; AOwner: TComponent); overload;
+    constructor Create(ACampos: TJSONObject; AOwner: TComponent); reintroduce;
     class procedure Registra;
     class procedure Desregistra;
     class function NomeModelo: string; virtual;
     class function TipoModelo: string; virtual;
     function ObtemValorCampo(const ANomeCampo: string): TJSONData;
     function GeraCodigoBanco(const ANumero: string): string; virtual;
-    procedure Executa(ACampos: TJSONObject); virtual;
+    procedure Executa; virtual; abstract;
     property Campos: TJSONObject read FCampos write FCampos;
     property CodigoBanco: string read FCodigoBanco write FCodigoBanco;
     property CodigoBancoComDV: string read FCodigoBancoComDV write FCodigoBancoComDV;
@@ -169,9 +168,10 @@ end;
 
 { TZBoletoModeloBase }
 
-constructor TZBoletoModeloBase.Create(AOwner: TComponent);
+constructor TZBoletoModeloBase.Create(ACampos: TJSONObject; AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FCampos := ACampos;
   FCodigoBanco := SZBNaoImplementado_Info;
   FCodigoBancoComDV := SZBNaoImplementado_Info;
   FNomeBanco := SZBNaoImplementado_Info;
@@ -188,12 +188,6 @@ begin
   FDV := SZBNaoImplementado_Info;
   FCodigo := SZBNaoImplementado_Info;
   FAgenciaCodigo := SZBNaoImplementado_Info;
-end;
-
-constructor TZBoletoModeloBase.Create(ACampos: TJSONObject; AOwner: TComponent);
-begin
-  Create(AOwner);
-  FCampos := ACampos;
 end;
 
 class procedure TZBoletoModeloBase.Registra;
@@ -237,11 +231,6 @@ function TZBoletoModeloBase.GeraCodigoBanco(const ANumero: string): string;
 begin
   Result := Copy(ANumero, 1, 3);
   Result += '-' + Modulo11(Result);
-end;
-
-procedure TZBoletoModeloBase.Executa(ACampos: TJSONObject);
-begin
-  FCampos := ACampos;
 end;
 
 { TZBoletoAnalisadorBase }
@@ -329,9 +318,9 @@ end;
 function TZBoletoBase.Executa(const ATipoModelo, ATipoAnalisador: string;
   out AModelo: TZBoletoModeloBase; out AAnalisador: TZBoletoAnalisadorBase): string;
 begin
-  AModelo := ObtemClasseModeloPorTipoModelo(ATipoModelo).Create(nil);
+  AModelo := ObtemClasseModeloPorTipoModelo(ATipoModelo).Create(FCampos, nil);
   AAnalisador := ObtemClasseAnalisadorPorTipoAnalisador(ATipoAnalisador).Create(nil);
-  AModelo.Executa(FCampos);
+  AModelo.Executa;
   Result := AAnalisador.Executa(FCampos, AModelo.NomeModelo);
 end;
 

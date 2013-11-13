@@ -38,7 +38,7 @@ type
     class function TipoModelo: string; override;
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa(ACampos: TJSONObject); override;
+    procedure Executa; override;
     property NNum: string read FNNum write FNNum;
   end;
 
@@ -81,11 +81,10 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloCEF.Executa(ACampos: TJSONObject);
+procedure TZBoletoModeloCEF.Executa;
 var
   VDataVencto: TJSONData;
 begin
-  inherited;
   NomeBanco := 'Caixa Econômica Federal';
   CodigoBanco := '104';
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
@@ -110,11 +109,11 @@ begin
   Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento + Valor + FNNum +
     Agencia + ContaCedente;
   AgenciaCodigo := Agencia + ' / ' + ContaCedente + '-' + ContaCedenteDV;
-  ACampos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
-  ACampos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
-  ACampos.Strings['agencia_codigo'] := AgenciaCodigo;
-  ACampos.Strings['nosso_numero'] := NossoNumero;
-  ACampos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
+  Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
+  Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
+  Campos.Strings['agencia_codigo'] := AgenciaCodigo;
+  Campos.Strings['nosso_numero'] := NossoNumero;
+  Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
   VDataVencto := ObtemValorCampo('data_vencimento');
   if VDataVencto.AsString = '' then
     VDataVencto.AsString := 'Contra apresentação';

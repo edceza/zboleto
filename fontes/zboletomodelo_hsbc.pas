@@ -24,7 +24,7 @@ unit ZBoletoModelo_HSBC;
 interface
 
 uses
-  ZBoleto, ZBoletoUteis, SysUtils, FPJSON;
+  ZBoleto, ZBoletoUteis, SysUtils;
 
 type
 
@@ -46,7 +46,7 @@ type
       const T: string = 'geral'): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
     function GeraNossoNumero(ANDoc, ACedente, AVenc, ATipoId: string): string;
-    procedure Executa(ACampos: TJSONObject); override;
+    procedure Executa; override;
     property NNum: string read FNNum write FNNum;
     property NDoc: string read FNDoc write FNDoc;
     property CodigoCedente: string read FCodigoCedente write FCodigoCedente;
@@ -112,9 +112,8 @@ begin
   Result := ANDoc + Modulo11Invertido(IntToStr(VRes));
 end;
 
-procedure TZBoletoModeloHSBC.Executa(ACampos: TJSONObject);
+procedure TZBoletoModeloHSBC.Executa;
 begin
-  inherited;
   NomeBanco := 'HSBC';
   CodigoBanco := '399';
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
@@ -138,11 +137,11 @@ begin
   DV := DigitoVerificadorBarra(FBarra);
   Codigo := Copy(FBarra, 1, 4) + DV + Copy(FBarra, 5, MaxInt);
   AgenciaCodigo := FCodigoCedente;
-  ACampos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
-  ACampos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
-  ACampos.Strings['agencia_codigo'] := AgenciaCodigo;
-  ACampos.Strings['nosso_numero'] := NossoNumero;
-  ACampos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
+  Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
+  Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
+  Campos.Strings['agencia_codigo'] := AgenciaCodigo;
+  Campos.Strings['nosso_numero'] := NossoNumero;
+  Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
 end;
 
 initialization

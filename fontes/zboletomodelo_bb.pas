@@ -40,7 +40,7 @@ type
     class function TipoModelo: string; override;
     function FormataNumero(const V: string; const N: Integer; const I: string;
       const T: string = 'geral'): string;
-    procedure Executa(ACampos: TJSONObject); override;
+    procedure Executa; override;
     property LivreZeros: string read FLivreZeros write FLivreZeros;
     property Convenio: string read FConvenio write FConvenio;
     property NServico: string read FNServico write FNServico;
@@ -79,11 +79,10 @@ begin
   end;
 end;
 
-procedure TZBoletoModeloBB.Executa(ACampos: TJSONObject);
+procedure TZBoletoModeloBB.Executa;
 var
   VFormatacaoConvenio, VFormatacaoNossoNumero: TJSONData;
 begin
-  inherited;
   NomeBanco := 'Banco do Brasil';
   CodigoBanco := '001';
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
@@ -155,11 +154,11 @@ begin
         end;
       end;
   end;
-  ACampos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
-  ACampos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
-  ACampos.Strings['agencia_codigo'] := AgenciaCodigo;
-  ACampos.Strings['nosso_numero'] := NossoNumero;
-  ACampos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
+  Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
+  Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
+  Campos.Strings['agencia_codigo'] := AgenciaCodigo;
+  Campos.Strings['nosso_numero'] := NossoNumero;
+  Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
 end;
 
 initialization

@@ -46,7 +46,7 @@ type
     function FormataNumero(const V: string; const N: Integer; const I: string;
       const T: string = 'geral'): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa(ACampos: TJSONObject); override;
+    procedure Executa; override;
     property Fixo: string read FFixo write FFixo;
     property Ios: string read FIos write FIos;
     property CodigoCliente: string read FCodigoCliente write FCodigoCliente;
@@ -102,11 +102,10 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloSantander.Executa(ACampos: TJSONObject);
+procedure TZBoletoModeloSantander.Executa;
 var
   VCodigoCliente, VNossoNumero: TJSONData;
 begin
-  inherited;
   NomeBanco := 'Santander';
   CodigoBanco := '033';
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
@@ -129,10 +128,10 @@ begin
     FCodigoCliente + NossoNumero + FIos + Carteira;
   DV := DigitoVerificadorBarra(FBarra);
   Codigo := Copy(FBarra, 1, 4) + DV + Copy(FBarra, 5, MaxInt);
-  ACampos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
-  ACampos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
-  ACampos.Strings['nosso_numero'] := NossoNumero;
-  ACampos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
+  Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
+  Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
+  Campos.Strings['nosso_numero'] := NossoNumero;
+  Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
   VCodigoCliente := ObtemValorCampo('codigo_cliente');
   VCodigoCliente.AsString := Copy(VCodigoCliente.AsString, 1,
     Length(VCodigoCliente.AsString) - 1) + '-' + Copy(VCodigoCliente.AsString,
