@@ -1,0 +1,4 @@
+. Gerar arquivo de remessa;
+. Ler arquivo de retorno;
+. Implementar modelos para outros bancos;
+. Gerar boletos em formato PDF;
