@@ -11,7 +11,7 @@ O projeto [ZBoleto](http://silvioprog.github.io/zboleto/) é um ótimo gerador d
 
 ##LICENÇA
 
-O código fonte do ZBoleto é distribuído sob licença GNU Lesser General Public License. Veja a [licença do projeto](https://github.com/silvioprog/zboleto/blob/master/LICENCA.txt) para detalhes de copyright/licençe.
+O código fonte do ZBoleto é distribuído sob licença GNU Lesser General Public License. Veja a [licença do projeto](https://github.com/silvioprog/zboleto/blob/master/LICENCA.txt) para detalhes de copyright/licença.
 
 ##REQUISITOS DO SISTEMA
 
