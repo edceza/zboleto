@@ -121,7 +121,7 @@ Por favor, use a [página de issues](https://github.com/silvioprog/zboleto/issue
 
 Você pode baixar uma cópia atual [aqui](https://github.com/silvioprog/zboleto/archive/master.zip). Alternativamente, você também pode seguir repositório GIT do projeto. O endereço é:
 
-`git://github.com/silvioprog/brookframework.git`
+`git://github.com/silvioprog/zboleto.git`
 
 ##CONTRIBUIDORES
 
