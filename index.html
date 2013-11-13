@@ -176,9 +176,21 @@
 <a name="doadores" class="anchor" href="#doadores"><span class="octicon octicon-link"></span></a>DOADORES</h2>
 
 <p>Faça uma doação para o projeto, é extremamente fácil, gratuito, rápido e seguro!</p>
-
+<style type="text/css">
+	#btn-paypal { margin: 0; padding: 0; }
+	#btn-pagseguro { margin: 0; padding: 0; }
+</style>
 <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=GE9VT768TLP74&amp;lc=BR&amp;item_name=ZBoleto&amp;currency_code=BRL&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
-  <img src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif"></a></p>
+  <img src="https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif" id="btn-paypal"></a>
+<!-- INICIO FORMULARIO BOTAO PAGSEGURO -->
+<form target="pagseguro" action="https://pagseguro.uol.com.br/checkout/v2/donation.html" method="post" id="btn-pagseguro">
+<!-- NÃO EDITE OS COMANDOS DAS LINHAS ABAIXO -->
+<input type="hidden" name="receiverEmail" value="silvioprog@uol.com.br" />
+<input type="hidden" name="currency" value="BRL" />
+<input type="image" src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/doacoes/120x53-doar.gif" name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!" />
+</form>
+<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
+</p>
 
 <p>Veja o nome de todos os doadores <a href="https://github.com/silvioprog/zboleto/blob/master/DOADORES.txt">aqui</a>.</p>
       </section>
