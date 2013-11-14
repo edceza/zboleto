@@ -37,7 +37,7 @@ type
     FCodigoCedente: string;
     FNDoc: string;
     FNNum: string;
-    FVencimento: string;
+    FVencimento: TDate;
     FVencJuliano: string;
   public
     class function NomeModelo: string; override;
@@ -45,12 +45,13 @@ type
     function FormataNumero(const V: string; const N: Integer; const I: string;
       const T: string = 'geral'): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    function GeraNossoNumero(ANDoc, ACedente, AVenc, ATipoId: string): string;
+    function GeraNossoNumero(ANDoc, ACedente, ATipoId: string;
+      const AVenc: TDate): string;
     procedure Prepara; override;
     property NNum: string read FNNum write FNNum;
     property NDoc: string read FNDoc write FNDoc;
     property CodigoCedente: string read FCodigoCedente write FCodigoCedente;
-    property Vencimento: string read FVencimento write FVencimento;
+    property Vencimento: TDate read FVencimento write FVencimento;
     property VencJuliano: string read FVencJuliano write FVencJuliano;
     property App: string read FApp write FApp;
     property Barra: string read FBarra write FBarra;
@@ -101,15 +102,12 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-function TZBoletoModeloHSBC.GeraNossoNumero(ANDoc, ACedente, AVenc,
-  ATipoId: string): string;
-var
-  VRes: Integer;
+function TZBoletoModeloHSBC.GeraNossoNumero(ANDoc, ACedente, ATipoId: string;
+  const AVenc: TDate): string;
 begin
   ANDoc := ANDoc + Modulo11Invertido(ANDoc) + ATipoId;
-  AVenc := Copy(AVenc, 1, 2) + Copy(AVenc, 4, 2) + Copy(AVenc, 9, 2);
-  VRes := StrToInt(ANDoc) + StrToInt(ACedente) + StrToInt(AVenc);
-  Result := ANDoc + Modulo11Invertido(IntToStr(VRes));
+  Result := ANDoc + Modulo11Invertido(IntToStr(StrToInt(ANDoc) +
+    StrToInt(ACedente) + StrToInt(FormatDateTime('ddmmyy', AVenc))));
 end;
 
 procedure TZBoletoModeloHSBC.Prepara;
@@ -126,10 +124,10 @@ begin
   FCodigoCedente := Self.FormataNumero(
     ObtemValorCampo('codigo_cedente').AsString, 7, '0');
   FNDoc := ObtemValorCampo('numero_documento').AsString;
-  FVencimento := ObtemValorCampo('data_vencimento').AsString;
+  FVencimento := StrToDate(ObtemValorCampo('data_vencimento').AsString);
   FNNum := Self.FormataNumero(ObtemValorCampo('numero_documento').AsString,
     13, '0');
-  NossoNumero := GeraNossoNumero(FNNum, FCodigoCedente, FVencimento, '4');
+  NossoNumero := GeraNossoNumero(FNNum, FCodigoCedente, '4', FVencimento);
   FVencJuliano := DataJuliano(FVencimento);
   FApp := '2';
   FBarra := CodigoBanco + NumMoeda + FatorVencimento + Valor + FCodigoCedente +

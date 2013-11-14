@@ -38,7 +38,7 @@ type
     FFixo: string;
     FIos: string;
     FNNum: string;
-    FVencimento: string;
+    FVencimento: TDate;
     FVencJuliano: string;
   public
     class function NomeModelo: string; override;
@@ -52,7 +52,7 @@ type
     property CodigoCliente: string read FCodigoCliente write FCodigoCliente;
     property NNum: string read FNNum write FNNum;
     property DVNossoNumero: string read FDVNossoNumero write FDVNossoNumero;
-    property Vencimento: string read FVencimento write FVencimento;
+    property Vencimento: TDate read FVencimento write FVencimento;
     property VencJuliano: string read FVencJuliano write FVencJuliano;
     property Barra: string read FBarra write FBarra;
   end;
@@ -122,7 +122,7 @@ begin
   FNNum := Self.FormataNumero(ObtemValorCampo('nosso_numero').AsString, 7, '0');
   DVNossoNumero := Modulo11(FNNum, 9, False);
   NossoNumero := '00000' + FNNum + FDVNossoNumero;
-  FVencimento := ObtemValorCampo('data_vencimento').AsString;
+  FVencimento := StrToDate(ObtemValorCampo('data_vencimento').AsString);
   FVencJuliano := DataJuliano(FVencimento);
   FBarra := CodigoBanco + NumMoeda + FatorVencimento + Valor + FFixo +
     FCodigoCliente + NossoNumero + FIos + Carteira;
