@@ -54,17 +54,16 @@ implementation
 
 function DataJuliano(const AData: string): string;
 var
-  VDataF, VDataI: TDateTime;
-  VDia, VMes, VAno, VDias: Integer;
+  D, M, A: word;
 begin
-  VDia := StrToInt(Copy(AData, 1, 2));
-  VMes := StrToInt(Copy(AData, 4, 2));
-  VAno := StrToInt(Copy(AData, 7, 4));
-  VDataF := StrToDate(IntToStr(VDia) + '/' + IntToStr(VMes) + '/' +
-    IntToStr(VAno));
-  VDataI := StrToDate('31/12/' + IntToStr(VAno - 1));
-  VDias := Trunc((VDataF - VDataI));
-  Result := StrZero(IntToStr(VDias), 3) + Copy(AData, 10, 4);
+  if AData = 0 then
+    Result := '0000'
+  else
+  begin
+    DecodeDate(AData, A, M, D);
+    Result := AddChar('0', IntToStr(Trunc((AData -
+      EncodeDate(A - 1, 12, 31)))), 3) + IntToStr(A)[4];
+  end;
 end;
 
 function RemoveDiacriticos(const S: string): string;
