@@ -42,7 +42,7 @@ type
       const T: string = 'geral'): string;
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property NNum: string read FNNum write FNNum;
     property DVNossoNumero: string read FDVNossoNumero write FDVNossoNumero;
     property CodigoBarras: string read FCodigoBarras write FCodigoBarras;
@@ -108,7 +108,7 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloItau.Executa;
+procedure TZBoletoModeloItau.Prepara;
 begin
   NomeBanco := 'Itaú';
   CodigoBanco := '341';

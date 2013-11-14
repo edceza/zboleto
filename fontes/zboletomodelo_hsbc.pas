@@ -46,7 +46,7 @@ type
       const T: string = 'geral'): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
     function GeraNossoNumero(ANDoc, ACedente, AVenc, ATipoId: string): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property NNum: string read FNNum write FNNum;
     property NDoc: string read FNDoc write FNDoc;
     property CodigoCedente: string read FCodigoCedente write FCodigoCedente;
@@ -112,7 +112,7 @@ begin
   Result := ANDoc + Modulo11Invertido(IntToStr(VRes));
 end;
 
-procedure TZBoletoModeloHSBC.Executa;
+procedure TZBoletoModeloHSBC.Prepara;
 begin
   NomeBanco := 'HSBC';
   CodigoBanco := '399';

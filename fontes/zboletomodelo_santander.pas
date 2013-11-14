@@ -46,7 +46,7 @@ type
     function FormataNumero(const V: string; const N: Integer; const I: string;
       const T: string = 'geral'): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property Fixo: string read FFixo write FFixo;
     property Ios: string read FIos write FIos;
     property CodigoCliente: string read FCodigoCliente write FCodigoCliente;
@@ -102,7 +102,7 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloSantander.Executa;
+procedure TZBoletoModeloSantander.Prepara;
 var
   VCodigoCliente, VNossoNumero: TJSONData;
 begin

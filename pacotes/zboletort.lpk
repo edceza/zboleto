@@ -22,7 +22,7 @@
     <Description Value="ZBoleto - Gerador de boletos bancários.
 Pacote runtime."/>
     <License Value="Por favor leia o arquivo LICENCA."/>
-    <Version Major="1"/>
+    <Version Major="1" Release="1"/>
     <Files Count="13">
       <Item1>
         <Filename Value="..\fontes\zboleto.pas"/>

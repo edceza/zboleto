@@ -40,7 +40,7 @@ type
     class function TipoModelo: string; override;
     function FormataNumero(const V: string; const N: Integer; const I: string;
       const T: string = 'geral'): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property LivreZeros: string read FLivreZeros write FLivreZeros;
     property Convenio: string read FConvenio write FConvenio;
     property NServico: string read FNServico write FNServico;
@@ -79,7 +79,7 @@ begin
   end;
 end;
 
-procedure TZBoletoModeloBB.Executa;
+procedure TZBoletoModeloBB.Prepara;
 var
   VFormatacaoConvenio, VFormatacaoNossoNumero: TJSONData;
 begin

@@ -62,7 +62,7 @@ type
     class function TipoModelo: string; virtual;
     function ObtemValorCampo(const ANomeCampo: string): TJSONData;
     function GeraCodigoBanco(const ANumero: string): string; virtual;
-    procedure Executa; virtual; abstract;
+    procedure Prepara; virtual; abstract;
     property Campos: TJSONObject read FCampos write FCampos;
     property CodigoBanco: string read FCodigoBanco write FCodigoBanco;
     property CodigoBancoComDV: string read FCodigoBancoComDV write FCodigoBancoComDV;
@@ -109,6 +109,11 @@ type
       const ATipoAnalisador: string): TZClasseBoletoAnalisadorBase;
     function ObtemClasseAnalisadorPorTipoAnalisador(
       const ATipoAnalisador: string): TZClasseBoletoAnalisadorBase;
+    procedure Prepara(const ATipoModelo: string;
+      out AModelo: TZBoletoModeloBase); overload;
+    procedure Prepara(const ATipoModelo, ATipoAnalisador: string;
+      out AModelo: TZBoletoModeloBase;
+      out AAnalisador: TZBoletoAnalisadorBase); overload;
     function Executa(const ATipoModelo, ATipoAnalisador: string;
       out AModelo: TZBoletoModeloBase;
       out AAnalisador: TZBoletoAnalisadorBase): string; overload;
@@ -315,12 +320,24 @@ begin
     raise EZBoleto.CreateFmt(SZBAnalisadorNaoRegistrado_Erro, [ATipoAnalisador]);
 end;
 
+procedure TZBoletoBase.Prepara(const ATipoModelo: string;
+  out AModelo: TZBoletoModeloBase);
+begin
+  AModelo := ObtemClasseModeloPorTipoModelo(ATipoModelo).Create(FCampos, nil);
+  AModelo.Prepara;
+end;
+
+procedure TZBoletoBase.Prepara(const ATipoModelo, ATipoAnalisador: string;
+  out AModelo: TZBoletoModeloBase; out AAnalisador: TZBoletoAnalisadorBase);
+begin
+  AAnalisador := ObtemClasseAnalisadorPorTipoAnalisador(ATipoAnalisador).Create(nil);
+  Prepara(ATipoModelo, AModelo);
+end;
+
 function TZBoletoBase.Executa(const ATipoModelo, ATipoAnalisador: string;
   out AModelo: TZBoletoModeloBase; out AAnalisador: TZBoletoAnalisadorBase): string;
 begin
-  AModelo := ObtemClasseModeloPorTipoModelo(ATipoModelo).Create(FCampos, nil);
-  AAnalisador := ObtemClasseAnalisadorPorTipoAnalisador(ATipoAnalisador).Create(nil);
-  AModelo.Executa;
+  Prepara(ATipoModelo, ATipoAnalisador, AModelo, AAnalisador);
   Result := AAnalisador.Executa(FCampos, AModelo.NomeModelo);
 end;
 

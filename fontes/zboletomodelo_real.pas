@@ -41,7 +41,7 @@ type
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
     procedure DVBarra(PNumero: PString);
-    procedure Executa; override;
+    procedure Prepara; override;
     property DigitaoCobranca: string read FDigitaoCobranca write FDigitaoCobranca;
   end;
 
@@ -123,7 +123,7 @@ begin
   end;
 end;
 
-procedure TZBoletoModeloReal.Executa;
+procedure TZBoletoModeloReal.Prepara;
 begin
   NomeBanco := 'Real';
   CodigoBanco := '356';

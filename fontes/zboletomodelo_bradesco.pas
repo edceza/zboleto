@@ -41,7 +41,7 @@ type
       const T: string = 'geral'): string;
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property NNum: string read FNNum write FNNum;
     property DVNossoNumero: string read FDVNossoNumero write FDVNossoNumero;
   end;
@@ -106,7 +106,7 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloBradesco.Executa;
+procedure TZBoletoModeloBradesco.Prepara;
 begin
   NomeBanco := 'Bradesco';
   CodigoBanco := '237';

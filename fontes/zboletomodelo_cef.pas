@@ -38,7 +38,7 @@ type
     class function TipoModelo: string; override;
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property NNum: string read FNNum write FNNum;
   end;
 
@@ -81,7 +81,7 @@ begin
     Result := IntToStr(11 - VResto2);
 end;
 
-procedure TZBoletoModeloCEF.Executa;
+procedure TZBoletoModeloCEF.Prepara;
 var
   VDataVencto: TJSONData;
 begin

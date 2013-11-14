@@ -52,7 +52,7 @@ type
     function DigitoVerificadorNossoNumero(const ANumero: string): string;
     function DigitoVerificadorCampoLivre(const ANumero: string): string;
     function DigitoVerificadorBarra(const ANumero: string): string;
-    procedure Executa; override;
+    procedure Prepara; override;
     property Posto: string read FPosto write FPosto;
     property Filler1: string read FFiller1 write FFiller1;
     property Filler2: string read FFiller2 write FFiller2;
@@ -142,7 +142,7 @@ begin
     Result := IntToStr(VDigito);
 end;
 
-procedure TZBoletoModeloSICREDI.Executa;
+procedure TZBoletoModeloSICREDI.Prepara;
 begin
   NomeBanco := 'SICREDI';
   CodigoBanco := '748';
