@@ -115,14 +115,13 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(StrToDate(
-    ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString, 10,
-    '0', 'valor');
-  Agencia := Self.FormataNumero(ObtemValorCampo('agencia').AsString, 4, '0');
-  Conta := Self.FormataNumero(ObtemValorCampo('conta').AsString, 5, '0');
-  ContaDV := Self.FormataNumero(ObtemValorCampo('conta_dv').AsString, 1, '0');
-  Carteira := ObtemValorCampo('carteira').AsString;
-  FNNum := Self.FormataNumero(ObtemValorCampo('nosso_numero').AsString, 8, '0');
+    Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10, '0', 'valor');
+  Agencia := Self.FormataNumero(Campo('agencia').AsString, 4, '0');
+  Conta := Self.FormataNumero(Campo('conta').AsString, 5, '0');
+  ContaDV := Self.FormataNumero(Campo('conta_dv').AsString, 1, '0');
+  Carteira := Campo('carteira').AsString;
+  FNNum := Self.FormataNumero(Campo('nosso_numero').AsString, 8, '0');
   FCodigoBarras := CodigoBanco + NumMoeda + FatorVencimento + Valor + Carteira +
     FNNum + Modulo10(Agencia + Conta + Carteira + FNNum) + Agencia + Conta +
     Modulo10(Agencia + Conta) + '000';

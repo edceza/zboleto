@@ -119,17 +119,14 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(
-    StrToDate(ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString,
-    10, '0', 'valor');
-  Carteira := ObtemValorCampo('carteira').AsString;
-  FCodigoCedente := Self.FormataNumero(
-    ObtemValorCampo('codigo_cedente').AsString, 7, '0');
-  FNDoc := ObtemValorCampo('numero_documento').AsString;
-  FVencimento := ObtemValorCampo('data_vencimento').AsString;
+    StrToDate(Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10, '0', 'valor');
+  Carteira := Campo('carteira').AsString;
+  FCodigoCedente := Self.FormataNumero(Campo('codigo_cedente').AsString, 7, '0');
+  FNDoc := Campo('numero_documento').AsString;
+  FVencimento := Campo('data_vencimento').AsString;
   VVenc := StrToDate(FVencimento);
-  FNNum := Self.FormataNumero(ObtemValorCampo('numero_documento').AsString,
-    13, '0');
+  FNNum := Self.FormataNumero(Campo('numero_documento').AsString, 13, '0');
   NossoNumero := GeraNossoNumero(FNNum, FCodigoCedente, '4', VVenc);
   FVencJuliano := DataJuliano(VVenc);
   FApp := '2';

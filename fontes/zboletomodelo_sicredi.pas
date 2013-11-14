@@ -149,21 +149,20 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(StrToDate(
-    ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString, 10,
-    '0', 'valor');
-  Agencia := Self.FormataNumero(ObtemValorCampo('agencia').AsString, 4, '0');
-  FPosto := Self.FormataNumero(ObtemValorCampo('posto').AsString, 2, '0');
-  Conta := Self.FormataNumero(ObtemValorCampo('conta').AsString, 5, '0');
-  ContaDV := Self.FormataNumero(ObtemValorCampo('conta_dv').AsString, 1, '0');
-  Carteira := ObtemValorCampo('carteira').AsString;
+    Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10, '0', 'valor');
+  Agencia := Self.FormataNumero(Campo('agencia').AsString, 4, '0');
+  FPosto := Self.FormataNumero(Campo('posto').AsString, 2, '0');
+  Conta := Self.FormataNumero(Campo('conta').AsString, 5, '0');
+  ContaDV := Self.FormataNumero(Campo('conta_dv').AsString, 1, '0');
+  Carteira := Campo('carteira').AsString;
   FFiller1 := '1';
   FFiller2 := '0';
-  FByteIdt := ObtemValorCampo('byte_idt').AsString;
+  FByteIdt := Campo('byte_idt').AsString;
   FTipoCobranca := '3';
   FTipoCarteira := '1';
-  FNNum := ObtemValorCampo('inicio_nosso_numero').AsString + FByteIdt +
-    Self.FormataNumero(ObtemValorCampo('nosso_numero').AsString, 5, '0');
+  FNNum := Campo('inicio_nosso_numero').AsString + FByteIdt +
+    Self.FormataNumero(Campo('nosso_numero').AsString, 5, '0');
   FDVNossoNumero := DigitoVerificadorNossoNumero(Agencia + FPosto + Conta +
     FNNum);
   FNossoNumeroDV := FNNum + FDVNossoNumero;

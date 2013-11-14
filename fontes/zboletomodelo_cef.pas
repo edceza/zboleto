@@ -90,20 +90,18 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(
-    StrToDate(ObtemValorCampo('data_vencimento').AsString));
-  Valor := ZBoletoUteis.FormataNumero(
-    ObtemValorCampo('valor_boleto').AsString, 10);
-  Agencia := ZBoletoUteis.FormataNumero(ObtemValorCampo('agencia').AsString, 4);
-  Conta := ZBoletoUteis.FormataNumero(ObtemValorCampo('conta').AsString, 5);
-  ContaDV := ZBoletoUteis.FormataNumero(ObtemValorCampo('conta_dv').AsString, 1);
-  Carteira := ObtemValorCampo('carteira').AsString;
-  FNNum := ObtemValorCampo('inicio_nosso_numero').AsString +
-    ZBoletoUteis.FormataNumero(ObtemValorCampo('nosso_numero').AsString, 8);
+    StrToDate(Campo('data_vencimento').AsString));
+  Valor := ZBoletoUteis.FormataNumero(Campo('valor_boleto').AsString, 10);
+  Agencia := ZBoletoUteis.FormataNumero(Campo('agencia').AsString, 4);
+  Conta := ZBoletoUteis.FormataNumero(Campo('conta').AsString, 5);
+  ContaDV := ZBoletoUteis.FormataNumero(Campo('conta_dv').AsString, 1);
+  Carteira := Campo('carteira').AsString;
+  FNNum := Campo('inicio_nosso_numero').AsString +
+    ZBoletoUteis.FormataNumero(Campo('nosso_numero').AsString, 8);
   NossoNumero := FNNum + '-' + DigitoVerificadorNossoNumero(FNNum);
-  ContaCedente := ZBoletoUteis.FormataNumero(
-    ObtemValorCampo('conta_cedente').AsString, 11);
+  ContaCedente := ZBoletoUteis.FormataNumero(Campo('conta_cedente').AsString, 11);
   ContaCedenteDV := ZBoletoUteis.FormataNumero(
-    ObtemValorCampo('conta_cedente_dv').AsString, 1);
+    Campo('conta_cedente_dv').AsString, 1);
   DV := DigitoVerificadorBarra(CodigoBanco + NumMoeda + FatorVencimento +
     Valor + FNNum + Agencia + ContaCedente);
   Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento + Valor + FNNum +
@@ -114,7 +112,7 @@ begin
   Campos.Strings['agencia_codigo'] := AgenciaCodigo;
   Campos.Strings['nosso_numero'] := NossoNumero;
   Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
-  VDataVencto := ObtemValorCampo('data_vencimento');
+  VDataVencto := Campo('data_vencimento');
   if VDataVencto.AsString = '' then
     VDataVencto.AsString := 'Contra apresentação';
 end;

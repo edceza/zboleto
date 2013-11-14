@@ -130,14 +130,12 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(StrToDate(
-    ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString, 10,
-    '0', 'valor');
-  Agencia := Self.FormataNumero(ObtemValorCampo('agencia').AsString, 4, '0');
-  Conta := Self.FormataNumero(ObtemValorCampo('conta').AsString, 7, '0');
-  Carteira := ObtemValorCampo('carteira').AsString;
-  NossoNumero := Self.FormataNumero(ObtemValorCampo('nosso_numero').AsString,
-    13, '0');
+    Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10, '0', 'valor');
+  Agencia := Self.FormataNumero(Campo('agencia').AsString, 4, '0');
+  Conta := Self.FormataNumero(Campo('conta').AsString, 7, '0');
+  Carteira := Campo('carteira').AsString;
+  NossoNumero := Self.FormataNumero(Campo('nosso_numero').AsString, 13, '0');
   FDigitaoCobranca := Modulo10(NossoNumero + Agencia + Conta);
   Codigo := CodigoBanco + NumMoeda + '0' + FatorVencimento + Valor + Agencia +
     Conta + FDigitaoCobranca + NossoNumero;

@@ -60,7 +60,7 @@ type
     class procedure Desregistra;
     class function NomeModelo: string; virtual;
     class function TipoModelo: string; virtual;
-    function ObtemValorCampo(const ANomeCampo: string): TJSONData;
+    function Campo(const ANomeCampo: string): TJSONData;
     function GeraCodigoBanco(const ANumero: string): string; virtual;
     procedure Prepara; virtual; abstract;
     property Campos: TJSONObject read FCampos write FCampos;
@@ -222,7 +222,7 @@ begin
   Result := SZBNaoImplementado_Info;
 end;
 
-function TZBoletoModeloBase.ObtemValorCampo(const ANomeCampo: string): TJSONData;
+function TZBoletoModeloBase.Campo(const ANomeCampo: string): TJSONData;
 var
   I: Integer;
 begin

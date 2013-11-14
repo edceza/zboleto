@@ -113,16 +113,15 @@ begin
   FFixo := '9';
   FIos := '0';
   FatorVencimento := CalculaFatorVencimento(StrToDate(
-    ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString, 10,
-    '0', 'valor');
-  Carteira := ObtemValorCampo('carteira').AsString;
+    Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10, '0', 'valor');
+  Carteira := Campo('carteira').AsString;
   FCodigoCliente :=
-    Self.FormataNumero(ObtemValorCampo('codigo_cliente').AsString, 7, '0');
-  FNNum := Self.FormataNumero(ObtemValorCampo('nosso_numero').AsString, 7, '0');
+    Self.FormataNumero(Campo('codigo_cliente').AsString, 7, '0');
+  FNNum := Self.FormataNumero(Campo('nosso_numero').AsString, 7, '0');
   DVNossoNumero := Modulo11(FNNum, 9, False);
   NossoNumero := '00000' + FNNum + FDVNossoNumero;
-  FVencimento := ObtemValorCampo('data_vencimento').AsString;
+  FVencimento := Campo('data_vencimento').AsString;
   FVencJuliano := DataJuliano(StrToDate(FVencimento));
   FBarra := CodigoBanco + NumMoeda + FatorVencimento + Valor + FFixo +
     FCodigoCliente + NossoNumero + FIos + Carteira;
@@ -132,11 +131,11 @@ begin
   Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);
   Campos.Strings['nosso_numero'] := NossoNumero;
   Campos.Strings['codigo_banco_com_dv'] := CodigoBancoComDV;
-  VCodigoCliente := ObtemValorCampo('codigo_cliente');
+  VCodigoCliente := Campo('codigo_cliente');
   VCodigoCliente.AsString := Copy(VCodigoCliente.AsString, 1,
     Length(VCodigoCliente.AsString) - 1) + '-' + Copy(VCodigoCliente.AsString,
     Length(VCodigoCliente.AsString), 1);
-  VNossoNumero := ObtemValorCampo('nosso_numero');
+  VNossoNumero := Campo('nosso_numero');
   VNossoNumero.AsString := Copy(VNossoNumero.AsString, 1,
     Length(VNossoNumero.AsString) - 1) + '-' + Copy(VNossoNumero.AsString,
     Length(VNossoNumero.AsString), 1);

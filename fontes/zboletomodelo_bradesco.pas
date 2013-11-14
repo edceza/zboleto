@@ -113,27 +113,26 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(StrToDate(
-    ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString, 10,
-    '0', 'valor');
-  Agencia := Self.FormataNumero(ObtemValorCampo('agencia').AsString, 4, '0');
-  Conta := Self.FormataNumero(ObtemValorCampo('conta').AsString, 6, '0');
-  ContaDV := Self.FormataNumero(ObtemValorCampo('conta_dv').AsString, 1, '0');
-  Carteira := ObtemValorCampo('carteira').AsString;
-  FNNum := Self.FormataNumero(ObtemValorCampo('carteira').AsString, 2, '0') +
-    Self.FormataNumero(ObtemValorCampo('nosso_numero').AsString, 11, '0');
+    Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10, '0', 'valor');
+  Agencia := Self.FormataNumero(Campo('agencia').AsString, 4, '0');
+  Conta := Self.FormataNumero(Campo('conta').AsString, 6, '0');
+  ContaDV := Self.FormataNumero(Campo('conta_dv').AsString, 1, '0');
+  Carteira := Campo('carteira').AsString;
+  FNNum := Self.FormataNumero(Campo('carteira').AsString, 2, '0') +
+    Self.FormataNumero(Campo('nosso_numero').AsString, 11, '0');
   FDVNossoNumero := DigitoVerificadorNossoNumero(NNum);
   NossoNumero := Copy(FNNum, 1, 2) + '/' + Copy(FNNum, 3, MaxInt) + '-' +
     FDVNossoNumero;
-  ContaCedente := Self.FormataNumero(ObtemValorCampo('conta_cedente').AsString,
+  ContaCedente := Self.FormataNumero(Campo('conta_cedente').AsString,
     7, '0');
   ContaCedenteDV :=
-    Self.FormataNumero(ObtemValorCampo('conta_cedente_dv').AsString, 1, '0');
+    Self.FormataNumero(Campo('conta_cedente_dv').AsString, 1, '0');
   DV := DigitoVerificadorBarra(CodigoBanco + NumMoeda + FatorVencimento +
     Valor + Agencia + FNNum + ContaCedente + '0');
   Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento + Valor + Agencia +
     FNNum + ContaCedente + '0';
-  AgenciaCodigo := Agencia + '-' + ObtemValorCampo('agencia_dv').AsString +
+  AgenciaCodigo := Agencia + '-' + Campo('agencia_dv').AsString +
     ' / ' + ContaCedente + '-' + ContaCedenteDV;
   Campos.Strings['codigo_barras'] := CodBarras2de5ParaHml(Codigo);
   Campos.Strings['linha_digitavel'] := GeraLinhaDigitavel(Codigo);

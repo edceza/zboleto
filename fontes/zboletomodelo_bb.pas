@@ -88,23 +88,21 @@ begin
   CodigoBancoComDV := GeraCodigoBanco(CodigoBanco);
   NumMoeda := '9';
   FatorVencimento := CalculaFatorVencimento(StrToDate(
-    ObtemValorCampo('data_vencimento').AsString));
-  Valor := Self.FormataNumero(ObtemValorCampo('valor_boleto').AsString, 10,
-    '0', 'valor');
-  Agencia := Self.FormataNumero(ObtemValorCampo('agencia').AsString, 4, '0');
-  Conta := Self.FormataNumero(ObtemValorCampo('conta').AsString, 8, '0');
-  Carteira := ObtemValorCampo('carteira').AsString;
+    Campo('data_vencimento').AsString));
+  Valor := Self.FormataNumero(Campo('valor_boleto').AsString, 10,'0', 'valor');
+  Agencia := Self.FormataNumero(Campo('agencia').AsString, 4, '0');
+  Conta := Self.FormataNumero(Campo('conta').AsString, 8, '0');
+  Carteira := Campo('carteira').AsString;
   AgenciaCodigo := Agencia + '-' + Modulo11(Agencia) + ' / ' + Conta + '-' +
     Modulo11(Conta);
   FLivreZeros := '000000';
-  VFormatacaoConvenio := ObtemValorCampo('formatacao_convenio');
+  VFormatacaoConvenio := Campo('formatacao_convenio');
   case VFormatacaoConvenio.AsInteger of
     8:
       begin
-        FConvenio := Self.FormataNumero(ObtemValorCampo('convenio').AsString, 8,
-          '0', 'convenio');
-        NossoNumero := Self.FormataNumero(
-          ObtemValorCampo('nosso_numero').AsString, 9, '0');
+        FConvenio := Self.FormataNumero(Campo('convenio').AsString,
+          8, '0', 'convenio');
+        NossoNumero := Self.FormataNumero(Campo('nosso_numero').AsString, 9, '0');
         DV := Modulo11(CodigoBanco + NumMoeda + FatorVencimento + Valor +
           FLivreZeros + FConvenio + NossoNumero + Carteira);
         Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento + Valor +
@@ -114,10 +112,10 @@ begin
       end;
     7:
       begin
-        FConvenio := Self.FormataNumero(ObtemValorCampo('convenio').AsString, 7,
+        FConvenio := Self.FormataNumero(Campo('convenio').AsString, 7,
           '0', 'convenio');
-        NossoNumero := Self.FormataNumero(
-          ObtemValorCampo('nosso_numero').AsString, 10, '0');
+        NossoNumero := Self.FormataNumero(Campo('nosso_numero').AsString,
+          10, '0');
         DV := Modulo11(CodigoBanco + NumMoeda + FatorVencimento + Valor +
           FLivreZeros + FConvenio + NossoNumero + Carteira);
         Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento + Valor +
@@ -126,26 +124,26 @@ begin
       end;
     6:
       begin
-        FConvenio := Self.FormataNumero(ObtemValorCampo('convenio').AsString, 6,
+        FConvenio := Self.FormataNumero(Campo('convenio').AsString, 6,
           '0', 'convenio');
-        VFormatacaoNossoNumero := ObtemValorCampo('formatacao_nosso_numero');
+        VFormatacaoNossoNumero := Campo('formatacao_nosso_numero');
         case VFormatacaoNossoNumero.AsInteger of
           1:
             begin
-              NossoNumero := Self.FormataNumero(
-                ObtemValorCampo('nosso_numero').AsString, 5, '0');
-                DV := Modulo11(CodigoBanco + NumMoeda + FatorVencimento +
-                  Valor + FConvenio + NossoNumero + Agencia + Conta + Carteira);
+              NossoNumero := Self.FormataNumero(Campo('nosso_numero').AsString,
+                5, '0');
+              DV := Modulo11(CodigoBanco + NumMoeda + FatorVencimento +
+                Valor + FConvenio + NossoNumero + Agencia + Conta + Carteira);
                 Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento +
-                  Valor + FConvenio + NossoNumero + Agencia + Conta + Carteira;
-                NossoNumero := FConvenio + NossoNumero + '-' +
-                  Modulo11(FConvenio + NossoNumero);
+                Valor + FConvenio + NossoNumero + Agencia + Conta + Carteira;
+              NossoNumero := FConvenio + NossoNumero + '-' +
+                Modulo11(FConvenio + NossoNumero);
             end;
           2:
             begin
               FNServico := '21';
-              NossoNumero := Self.FormataNumero(
-                ObtemValorCampo('nosso_numero').AsString, 17, '0');
+              NossoNumero := Self.FormataNumero(Campo('nosso_numero').AsString,
+                17, '0');
               DV := Modulo11(CodigoBanco + NumMoeda + FatorVencimento + Valor +
                 FConvenio + NossoNumero + FNServico);
               Codigo := CodigoBanco + NumMoeda + DV + FatorVencimento + Valor +
