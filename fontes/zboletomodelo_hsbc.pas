@@ -37,7 +37,7 @@ type
     FCodigoCedente: string;
     FNDoc: string;
     FNNum: string;
-    FVencimento: TDate;
+    FVencimento: string;
     FVencJuliano: string;
   public
     class function NomeModelo: string; override;
@@ -51,7 +51,7 @@ type
     property NNum: string read FNNum write FNNum;
     property NDoc: string read FNDoc write FNDoc;
     property CodigoCedente: string read FCodigoCedente write FCodigoCedente;
-    property Vencimento: TDate read FVencimento write FVencimento;
+    property Vencimento: string read FVencimento write FVencimento;
     property VencJuliano: string read FVencJuliano write FVencJuliano;
     property App: string read FApp write FApp;
     property Barra: string read FBarra write FBarra;
@@ -111,6 +111,8 @@ begin
 end;
 
 procedure TZBoletoModeloHSBC.Prepara;
+var
+  VVenc: TDate;
 begin
   NomeBanco := 'HSBC';
   CodigoBanco := '399';
@@ -124,11 +126,12 @@ begin
   FCodigoCedente := Self.FormataNumero(
     ObtemValorCampo('codigo_cedente').AsString, 7, '0');
   FNDoc := ObtemValorCampo('numero_documento').AsString;
-  FVencimento := StrToDate(ObtemValorCampo('data_vencimento').AsString);
+  FVencimento := ObtemValorCampo('data_vencimento').AsString;
+  VVenc := StrToDate(FVencimento);
   FNNum := Self.FormataNumero(ObtemValorCampo('numero_documento').AsString,
     13, '0');
-  NossoNumero := GeraNossoNumero(FNNum, FCodigoCedente, '4', FVencimento);
-  FVencJuliano := DataJuliano(FVencimento);
+  NossoNumero := GeraNossoNumero(FNNum, FCodigoCedente, '4', VVenc);
+  FVencJuliano := DataJuliano(VVenc);
   FApp := '2';
   FBarra := CodigoBanco + NumMoeda + FatorVencimento + Valor + FCodigoCedente +
     FNNum + FVencJuliano + FApp;
