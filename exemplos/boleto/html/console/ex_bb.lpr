@@ -15,8 +15,8 @@ begin
   Boleto := TZBoleto.Create(nil);
   Conteudo := TMemoryStream.Create;
   try
-    ZBoletoAnalisadorHtml.DirModelos := '../../modelos/html';
-    Boleto.Campos.Add('dir_img', '../../imagens/');
+    ZBoletoAnalisadorHtml.DirModelos := '../../../../modelos/html';
+    Boleto.Campos.Add('dir_img', '../../../../imagens/');
 
     // DADOS DO BOLETO PARA O SEU CLIENTE
     DiasPrazoPagamento := 5;
