@@ -26,7 +26,7 @@ interface
 uses
   ZBoletoCodBarras, Classes, StrUtils, SysUtils, Base64;
 
-function DataJuliano(const AData: string): string;
+function DataJuliano(const AData: TDate): string;
 function RemoveDiacriticos(const S: string): string;
 function RemoveCaractrsEspeciais(const S: string): string;
 function StrZero(const S: string; const N: Integer): string;
@@ -52,7 +52,7 @@ function CodBarras2de5ParaHml(const ACod: string;
 
 implementation
 
-function DataJuliano(const AData: string): string;
+function DataJuliano(const AData: TDate): string;
 var
   D, M, A: word;
 begin
