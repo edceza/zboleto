@@ -1,1 +1,2 @@
-﻿NOME			SERVIÇO		QUANTIA (R$)	DATA		SITE
+NOME            SERVIÇO    QUANTIA (R$)  DATA        SITE
+Grupo ApoioERP  PagSeguro  30,00         14/11/2013  www.apoioerp.com.br
