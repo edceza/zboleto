@@ -101,6 +101,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function CriaModelo(const ATipo: string): TZBoletoModeloBase; virtual;
+    function CriaAnalisador(const ATipo: string): TZBoletoAnalisadorBase; virtual;
     function EncontraClasseModelo(
       const ATipoModelo: string): TZClasseBoletoModeloBase;
     function ObtemClasseModeloPorTipoModelo(
@@ -282,6 +284,16 @@ begin
   inherited Destroy;
 end;
 
+function TZBoletoBase.CriaModelo(const ATipo: string): TZBoletoModeloBase;
+begin
+  Result := ObtemClasseModeloPorTipoModelo(ATipo).Create(FCampos, Owner);
+end;
+
+function TZBoletoBase.CriaAnalisador(const ATipo: string): TZBoletoAnalisadorBase;
+begin
+  Result := ObtemClasseAnalisadorPorTipoAnalisador(ATipo).Create(Owner);
+end;
+
 function TZBoletoBase.EncontraClasseModelo(
   const ATipoModelo: string): TZClasseBoletoModeloBase;
 var
@@ -323,14 +335,14 @@ end;
 procedure TZBoletoBase.Prepara(const ATipoModelo: string;
   out AModelo: TZBoletoModeloBase);
 begin
-  AModelo := ObtemClasseModeloPorTipoModelo(ATipoModelo).Create(FCampos, nil);
+  AModelo := CriaModelo(ATipoModelo);
   AModelo.Prepara;
 end;
 
 procedure TZBoletoBase.Prepara(const ATipoModelo, ATipoAnalisador: string;
   out AModelo: TZBoletoModeloBase; out AAnalisador: TZBoletoAnalisadorBase);
 begin
-  AAnalisador := ObtemClasseAnalisadorPorTipoAnalisador(ATipoAnalisador).Create(nil);
+  AAnalisador := CriaAnalisador(ATipoAnalisador);
   Prepara(ATipoModelo, AModelo);
 end;
 
