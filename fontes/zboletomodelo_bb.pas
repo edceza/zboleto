@@ -3,7 +3,7 @@
 
   Copyright (C) 2013 Silvio Clecio.
 
-  http://silvioprog.github.io/zboleto/
+  http://silvioprog.github.io/zboleto
 
   Todos os contribuidores:
   Por favor, veja o arquivo CONTRIBUIDORES.txt, incluso nesta
