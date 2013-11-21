@@ -45,7 +45,10 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     class function TipoAnalisador: string; override;
-    function Executa(ACampos: TJSONObject; const ANomeModelo: string): string; override;
+    function Executa(ACampos: TJSONObject;
+      const ATipoModelo: string): string; override; overload;
+    procedure Executa(ACampos: TJSONObject;
+      const ATipoModelo, ANomeArquivo: string); override; overload;
     property SuportaHtml: Boolean read ObtemSuportaHtml write AtribuiSuportaHtml;
     property TagPrefixo: ShortString read ObtemTagPrefixo write AtribuiTagPrefixo;
     property TagSufixo: ShortString read ObtemTagSufixo write AtribuiTagSufixo;
@@ -109,13 +112,13 @@ begin
 end;
 
 function TZBoletoAnalisadorHtml.Executa(ACampos: TJSONObject;
-  const ANomeModelo: string): string;
+  const ATipoModelo: string): string;
 var
   I: Integer;
   VArq: string;
 begin
   VArq := IncludeTrailingPathDelimiter(DirModelos) +
-    LowerCase(ANomeModelo) + '.html';
+    LowerCase(ATipoModelo) + '.html';
   if not FileExists(VArq) then
     raise EZBoleto.CreateFmt(SZBArquivoNaoExiste_Erro, [VArq]);
   FModelo.LoadFromFile(VArq);
@@ -123,6 +126,21 @@ begin
     FModelo.Parser.Fields.Add(ACampos.Names[I], ACampos.Items[I].Clone);
   FModelo.Parser.Replace(True);
   Result := FModelo.Parser.Content;
+end;
+
+procedure TZBoletoAnalisadorHtml.Executa(ACampos: TJSONObject;
+  const ATipoModelo, ANomeArquivo: string);
+var
+  VSaida: string;
+  VConteudo: TFileStream;
+begin
+  VSaida := Executa(ACampos, ATipoModelo);
+  VConteudo := TFileStream.Create(ANomeArquivo, fmCreate);
+  try
+    VConteudo.Write(VSaida[1], Length(VSaida));
+  finally
+    VConteudo.Free;
+  end;
 end;
 
 initialization
