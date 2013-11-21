@@ -26,6 +26,7 @@ var
   ValorCobrado, TaxaBoleto: Currency;
   DataVenc, ValorBoleto: string;
 begin
+  DefaultFormatSettings.DecimalSeparator := ',';
   Boleto := TZBoleto.Create(nil);
   try
     ZBoletoAnalisadorHtml.DirModelos := '../../../../../modelos/html';
