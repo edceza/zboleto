@@ -94,7 +94,9 @@ type
     class procedure Desregistra;
     class function TipoAnalisador: string; virtual;
     function Executa({%H-}ACampos: TJSONObject;
-      {%H-}const ANomeModelo: string): string; virtual;
+      {%H-}const ATipoModelo: string): string; virtual; overload;
+    procedure Executa({%H-}ACampos: TJSONObject;
+      {%H-}const ATipoModelo, ANomeArquivo: string); virtual; overload;
   end;
 
   { TZBoletoBase }
@@ -288,9 +290,14 @@ begin
 end;
 
 function TZBoletoAnalisadorBase.Executa(ACampos: TJSONObject;
-  const ANomeModelo: string): string;
+  const ATipoModelo: string): string;
 begin
   Result := SZBNaoImplementado_Info;
+end;
+
+procedure TZBoletoAnalisadorBase.Executa(ACampos: TJSONObject;
+  const ATipoModelo, ANomeArquivo: string);
+begin
 end;
 
 { TZBoletoBase }
@@ -416,15 +423,15 @@ end;
 procedure TZBoletoBase.Executa(const ATipoModelo, ATipoAnalisador,
   ANomeArquivo: string);
 var
-  VSaida: string;
-  VConteudo: TFileStream;
+  VModelo: TZBoletoModeloBase = nil;
+  VAnalisador: TZBoletoAnalisadorBase = nil;
 begin
-  VSaida := Executa(ATipoModelo, ATipoAnalisador);
-  VConteudo := TFileStream.Create(ANomeArquivo, fmCreate);
   try
-    VConteudo.Write(VSaida[1], Length(VSaida));
+    Prepara(ATipoModelo, ATipoAnalisador, VModelo, VAnalisador);
+    VAnalisador.Executa(FCampos, VModelo.NomeModelo, ANomeArquivo);
   finally
-    VConteudo.Free;
+    FreeAndNil(VAnalisador);
+    FreeAndNil(VModelo);
   end;
 end;
 
