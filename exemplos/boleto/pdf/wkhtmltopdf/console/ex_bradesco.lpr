@@ -4,6 +4,12 @@
 
   https://code.google.com/p/wkhtmltopdf/downloads/detail?name=wkhtmltopdf-0.9.9-installer.exe
 
+  No Linux (Debian), basta apenas:
+
+  # apt-get install wkhtmltopdf
+
+  Enjoy!
+
  *********************************************************************************************)
 
 program ex_bradesco;
