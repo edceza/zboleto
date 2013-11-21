@@ -96,7 +96,7 @@ type
     function Executa({%H-}ACampos: TJSONObject;
       {%H-}const ATipoModelo: string): string; virtual; overload;
     procedure Executa({%H-}ACampos: TJSONObject;
-      {%H-}const ATipoModelo, ANomeArquivo: string); virtual; overload;
+      {%H-}const ATipoModelo,{%H-}ANomeArquivo: string); virtual; overload;
   end;
 
   { TZBoletoBase }

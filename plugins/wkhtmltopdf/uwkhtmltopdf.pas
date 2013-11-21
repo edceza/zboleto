@@ -13,6 +13,7 @@ const
   WKHTMLTOPDF_FILE_NAME: string = '';
 
 type
+  EWkHtmlToPdf = class(Exception);
 
   { TWkHtmlToPdf }
 
@@ -20,9 +21,11 @@ type
   private
     FCmd: TFileName;
     FCopies: Integer;
+    FDeleteTmpFiles: Boolean;
     FGrayScale: Boolean;
     FHtmlFile: TFileName;
     FOrientation: string;
+    FOutput: TStrings;
     FParameters: TStrings;
     FPdfFile: TFileName;
     FProcess: TProcess;
@@ -34,6 +37,7 @@ type
     destructor Destroy; override;
     procedure Execute;
     property Cmd: TFileName read FCmd write FCmd;
+    property DeleteTmpFiles: Boolean read FDeleteTmpFiles write FDeleteTmpFiles;
     property HtmlFile: TFileName read FHtmlFile write FHtmlFile;
     property PdfFile: TFileName read FPdfFile write FPdfFile;
     property Orientation: string read FOrientation write FOrientation;
@@ -43,6 +47,7 @@ type
     property GrayScale: Boolean read FGrayScale write FGrayScale;
     property Title: string read FTitle write FTitle;
     property Parameters: TStrings read FParameters write FParameters;
+    property Output: TStrings read FOutput write FOutput;
   end;
 
 implementation
@@ -54,7 +59,10 @@ begin
   inherited Create;
   FProcess := TProcess.Create(nil);
   FParameters := TStringList.Create;
+  FOutput := TStringList.Create;
+  FOutput.NameValueSeparator := ':';
   FCmd := WKHTMLTOPDF_FILE_NAME;
+  FDeleteTmpFiles := True;
   FHtmlFile := 'input.html';
   FPdfFile := 'output.pdf';
   FOrientation := 'Portrait';
@@ -64,40 +72,55 @@ end;
 
 destructor TWkHtmlToPdf.Destroy;
 begin
+  FOutput.Free;
   FParameters.Free;
   FProcess.Free;
   inherited Destroy;
 end;
 
 procedure TWkHtmlToPdf.Execute;
+var
+  VError: string;
 begin
-  FProcess.Executable := FCmd;
-  FProcess.Parameters.Assign(FParameters);
-  FProcess.Parameters.Add('--quiet');
-  FProcess.Parameters.Add('--footer-center');
-  FProcess.Parameters.Add(
-{$IFDEF MSWINDOWS}Utf8ToAnsi({$ENDIF}
-    'ZBoleto - Gerador de boletos bancários.'
-{$IFDEF MSWINDOWS}){$ENDIF});
-  FProcess.Parameters.Add('--copies');
-  FProcess.Parameters.Add(IntToStr(FCopies));
-  FProcess.Parameters.Add('--orientation');
-  FProcess.Parameters.Add(FOrientation);
-  FProcess.Parameters.Add('--page-size');
-  FProcess.Parameters.Add(FPageSize);
-  if FToc then
-    FProcess.Parameters.Add('--toc');
-  if FGrayScale then
-    FProcess.Parameters.Add('--grayscale');
-  if FTitle <> '' then
-  begin
-    FProcess.Parameters.Add('--title');
-    FProcess.Parameters.Add(FTitle);
+  try
+    FProcess.Options := FProcess.Options + [poUsePipes, poStderrToOutPut,
+      poWaitOnExit, poNoConsole];
+    FProcess.Executable := FCmd;
+    FProcess.Parameters.Assign(FParameters);
+    FProcess.Parameters.Add('--quiet');
+    FProcess.Parameters.Add('--disable-smart-shrinking');
+    FProcess.Parameters.Add('--copies');
+    FProcess.Parameters.Add(IntToStr(FCopies));
+    FProcess.Parameters.Add('--orientation');
+    FProcess.Parameters.Add(FOrientation);
+    FProcess.Parameters.Add('--page-size');
+    FProcess.Parameters.Add(FPageSize);
+    if FToc then
+      FProcess.Parameters.Add('--toc');
+    if FGrayScale then
+      FProcess.Parameters.Add('--grayscale');
+    if FTitle <> '' then
+    begin
+      FProcess.Parameters.Add('--title');
+      FProcess.Parameters.Add(
+{$IFDEF MSWINDOWS}Utf8ToAnsi({$ENDIF}FTitle{$IFDEF MSWINDOWS}){$ENDIF});
+    end;
+    if not FileExists(FHtmlFile) then
+      raise EWkHtmlToPdf.CreateFmt('Arquivo "%s" não encontrado.', [FHtmlFile]);
+    FProcess.Parameters.Add(FHtmlFile);
+    if Trim(FPdfFile) = '' then
+      raise EWkHtmlToPdf.Create('Informe um nome correto para o aquivo a ser gerado.');
+    FProcess.Parameters.Add(FPdfFile);
+    FProcess.Execute;
+    FOutput.Clear;
+    FOutput.LoadFromStream(FProcess.Output);
+    VError := Trim(FOutput.Values['Error']);
+    if VError <> '' then
+      raise Exception.Create(VError);
+  finally
+    if FDeleteTmpFiles then
+      DeleteFile(FHtmlFile);
   end;
-  FProcess.Parameters.Add('--disable-smart-shrinking');
-  FProcess.Parameters.Add(FHtmlFile);
-  FProcess.Parameters.Add(FPdfFile);
-  FProcess.Execute;
 end;
 
 initialization
@@ -112,4 +135,3 @@ initialization
   WKHTMLTOPDF_FILE_NAME := WKHTMLTOPDF_PATH + WKHTMLTOPDF_EXE;
 
 end.
-

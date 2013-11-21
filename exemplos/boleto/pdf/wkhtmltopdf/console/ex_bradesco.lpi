@@ -37,7 +37,7 @@
         <PackageName Value="ZBoletoRT"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="1">
       <Unit0>
         <Filename Value="ex_bradesco.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -50,12 +50,6 @@
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit0>
-      <Unit1>
-        <Filename Value="uwkhtmltopdf.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="uwkhtmltopdf"/>
-        <UsageCount Value="20"/>
-      </Unit1>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

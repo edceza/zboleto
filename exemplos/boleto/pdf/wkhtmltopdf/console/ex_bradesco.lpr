@@ -7,27 +7,19 @@ program ex_bradesco;
 {$mode objfpc}{$H+}
 
 uses
-  ZBoleto, ZBoletoAnalisadorHtml, ZBoletoModelo_Bradesco, uwkhtmltopdf, Classes,
-  SysUtils;
-
-const
-  HTML_FILE_NAME = 'boleto_bradesco.html';
-  PDF_FILE_NAME = 'boleto_bradesco.pdf';
+  ZBoleto, ZBoletoAnalisadorHtml, ZBoletoAnalisadorWkHtmlToPdf,
+  ZBoletoModelo_Bradesco, SysUtils;
 
 var
   Boleto: TZBoleto;
-  WkHtmlToPdf: TWkHtmlToPdf;
-  Conteudo: TMemoryStream;
   DiasPrazoPagamento: Byte;
   ValorCobrado, TaxaBoleto: Currency;
-  DataVenc, ValorBoleto, Html: string;
+  DataVenc, ValorBoleto: string;
 begin
   Boleto := TZBoleto.Create(nil);
-  Conteudo := TMemoryStream.Create;
-  WkHtmlToPdf := TWkHtmlToPdf.Create;
   try
     ZBoletoAnalisadorHtml.DirModelos := '../../../../../modelos/html';
-    Boleto.Campos.Add('dir_img', '../../../../../imagens/');
+    Boleto.Campos.Add('dir_img', ExpandFileName('../../../../../imagens/'));
 
     // DADOS DO BOLETO PARA O SEU CLIENTE
     DiasPrazoPagamento := 5;
@@ -86,19 +78,8 @@ begin
     Boleto.Campos.Add('cidade_uf', 'Cidade / Estado');
     Boleto.Campos.Add('cedente', 'Coloque a Razão Social da sua empresa aqui');
 
-    Html := Boleto.Executa('bradesco', 'html');
-    Conteudo.Write(Html[1], Length(Html));
-    Conteudo.SaveToFile(HTML_FILE_NAME);
-    WkHtmlToPdf.HtmlFile := HTML_FILE_NAME;
-    WkHtmlToPdf.PdfFile := PDF_FILE_NAME;
-    WkHtmlToPdf.Title :=
-{$IFDEF MSWINDOWS}Utf8ToAnsi({$ENDIF}
-      'ZBoleto - Gerador de boletos bancários.'
-{$IFDEF MSWINDOWS}){$ENDIF};
-    WkHtmlToPdf.Execute;
+    Boleto.Executa('bradesco', 'pdf', 'boleto_bradesco.pdf');
   finally
-    WkHtmlToPdf.Free;
-    Conteudo.Free;
     Boleto.Free;
   end;
 end.
