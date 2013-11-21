@@ -1,6 +1,10 @@
-(***************************************************************
-  See wkhtmltopdf project: https://code.google.com/p/wkhtmltopdf
- ***************************************************************)
+(*********************************************************************************************
+
+  Para este exemplo funcionar no Windows, baixe e instale o seguinte programa:
+
+  https://code.google.com/p/wkhtmltopdf/downloads/detail?name=wkhtmltopdf-0.9.9-installer.exe
+
+ *********************************************************************************************)
 
 program ex_bradesco;
 
