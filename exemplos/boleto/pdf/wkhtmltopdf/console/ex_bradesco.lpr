@@ -8,7 +8,7 @@ program ex_bradesco;
 
 uses
   ZBoleto, ZBoletoAnalisadorHtml, ZBoletoAnalisadorWkHtmlToPdf,
-  ZBoletoModelo_Bradesco, SysUtils;
+  ZBoletoModelo_Bradesco, ZBoletoUteis, SysUtils;
 
 var
   Boleto: TZBoleto;
@@ -19,7 +19,7 @@ begin
   Boleto := TZBoleto.Create(nil);
   try
     ZBoletoAnalisadorHtml.DirModelos := '../../../../../modelos/html';
-    Boleto.Campos.Add('dir_img', ExpandFileName('../../../../../imagens/'));
+    Boleto.Campos.Add('dir_img', ExpandeDir('../../../../../imagens/'));
 
     // DADOS DO BOLETO PARA O SEU CLIENTE
     DiasPrazoPagamento := 5;
