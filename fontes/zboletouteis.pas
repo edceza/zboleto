@@ -49,6 +49,7 @@ function GeraLinhaDigitavel(const ACodigo: string): string; overload;
 function StrBinParaHml(const ACod: string; const AAltura: Integer = 50): string;
 function CodBarras2de5ParaHml(const ACod: string;
   const AAltura: Integer = 50): string;
+function ExpandeDir(const S: string): string;
 
 implementation
 
@@ -388,6 +389,11 @@ function CodBarras2de5ParaHml(const ACod: string;
   const AAltura: Integer): string;
 begin
   Result := StrBinParaHml(CodBarras2de5ParaStrBin(ACod), AAltura);
+end;
+
+function ExpandeDir(const S: string): string;
+begin
+  Result := ExtractFilePath(ExpandFileName(S));
 end;
 
 end.
