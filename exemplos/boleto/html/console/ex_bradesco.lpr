@@ -3,17 +3,15 @@ program ex_bradesco;
 {$mode objfpc}{$H+}
 
 uses
-  ZBoleto, ZBoletoAnalisadorHtml, ZBoletoModelo_Bradesco, Classes, SysUtils;
+  ZBoleto, ZBoletoAnalisadorHtml, ZBoletoModelo_Bradesco, SysUtils;
 
 var
   Boleto: TZBoleto;
-  Conteudo: TMemoryStream;
   DiasPrazoPagamento: Byte;
   ValorCobrado, TaxaBoleto: Currency;
-  DataVenc, ValorBoleto, Html: string;
+  DataVenc, ValorBoleto: string;
 begin
   Boleto := TZBoleto.Create(nil);
-  Conteudo := TMemoryStream.Create;
   try
     ZBoletoAnalisadorHtml.DirModelos := '../../../../modelos/html';
     Boleto.Campos.Add('dir_img', '../../../../imagens/');
@@ -75,11 +73,8 @@ begin
     Boleto.Campos.Add('cidade_uf', 'Cidade / Estado');
     Boleto.Campos.Add('cedente', 'Coloque a Razão Social da sua empresa aqui');
 
-    Html := Boleto.Executa('bradesco', 'html');
-    Conteudo.Write(Html[1], Length(Html));
-    Conteudo.SaveToFile('boleto_bradesco.html');
+    Boleto.Executa('bradesco', 'html', 'boleto_bradesco.html');
   finally
-    Conteudo.Free;
     Boleto.Free;
   end;
 end.

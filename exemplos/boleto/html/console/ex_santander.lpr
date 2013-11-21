@@ -3,17 +3,15 @@ program ex_santander;
 {$mode objfpc}{$H+}
 
 uses
-  ZBoleto, ZBoletoAnalisadorHtml, ZBoletoModelo_Santander, Classes, SysUtils;
+  ZBoleto, ZBoletoAnalisadorHtml, ZBoletoModelo_Santander, SysUtils;
 
 var
   Boleto: TZBoleto;
-  Conteudo: TMemoryStream;
   DiasPrazoPagamento: Byte;
   ValorCobrado, TaxaBoleto: Currency;
-  DataVenc, ValorBoleto, Html: string;
+  DataVenc, ValorBoleto: string;
 begin
   Boleto := TZBoleto.Create(nil);
-  Conteudo := TMemoryStream.Create;
   try
     ZBoletoAnalisadorHtml.DirModelos := '../../../../modelos/html';
     Boleto.Campos.Add('dir_img', '../../../../imagens/');
@@ -70,11 +68,8 @@ begin
     Boleto.Campos.Add('cidade_uf', 'Cidade / Estado');
     Boleto.Campos.Add('cedente', 'Coloque a Razão Social da sua empresa aqui');
 
-    Html := Boleto.Executa('santander', 'html');
-    Conteudo.Write(Html[1], Length(Html));
-    Conteudo.SaveToFile('boleto_santander.html');
+    Boleto.Executa('santander', 'html', 'boleto_santander.html');
   finally
-    Conteudo.Free;
     Boleto.Free;
   end;
 end.
