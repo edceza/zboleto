@@ -54,6 +54,10 @@ type
     FNossoNumero: string;
     FNumMoeda: string;
     FValor: string;
+  protected
+    procedure ChecaParametroInterno(AObject: TObject);
+    function CampoInterno(ACampos: TJSONObject;
+      const ANomeCampo: string): TJSONData;
   public
     constructor Create(ACampos: TJSONObject; AOwner: TComponent); reintroduce;
     class procedure Registra;
@@ -116,10 +120,16 @@ type
     procedure Prepara(const ATipoModelo, ATipoAnalisador: string;
       out AModelo: TZBoletoModeloBase;
       out AAnalisador: TZBoletoAnalisadorBase); overload;
+    procedure Prepara(const ATipoModelo, ATipoAnalisador: string;
+      out AAnalisador: TZBoletoAnalisadorBase); overload;
     function Executa(const ATipoModelo, ATipoAnalisador: string;
       out AModelo: TZBoletoModeloBase;
       out AAnalisador: TZBoletoAnalisadorBase): string; overload;
     function Executa(const ATipoModelo, ATipoAnalisador: string): string; overload;
+    function Executa(const ATipoModelo, ATipoAnalisador: string;
+      out AAnalisador: TZBoletoAnalisadorBase): string; overload;
+    procedure Executa(const ATipoModelo, ATipoAnalisador,
+      ANomeArquivo: string); overload;
     property Campos: TJSONObject read FCampos;
   end;
 
@@ -129,6 +139,7 @@ type
   end;
 
 resourcestring
+  SZBParametroNulo_Erro = 'Parâmetro não pode ser nulo.';
   SZBNaoImplementado_Info = 'Não implementado.';
   SZBCampoNaoEncontrado_Erro = 'Campo "%s" não adicionado.';
   SZBArquivoNaoExiste_Erro = 'Arquivo não existe: %s.';
@@ -224,14 +235,26 @@ begin
   Result := SZBNaoImplementado_Info;
 end;
 
-function TZBoletoModeloBase.Campo(const ANomeCampo: string): TJSONData;
+procedure TZBoletoModeloBase.ChecaParametroInterno(AObject: TObject);
+begin
+  if not Assigned(AObject) then
+    raise EZBoleto.Create(SZBParametroNulo_Erro);
+end;
+
+function TZBoletoModeloBase.CampoInterno(ACampos: TJSONObject;
+  const ANomeCampo: string): TJSONData;
 var
   I: Integer;
 begin
-  I := Campos.IndexOfName(ANomeCampo);
+  I := ACampos.IndexOfName(ANomeCampo);
   if I < 0 then
     raise EZBoleto.CreateFmt(SZBCampoNaoEncontrado_Erro, [ANomeCampo]);
-  Result := Campos.Items[I];
+  Result := ACampos.Items[I];
+end;
+
+function TZBoletoModeloBase.Campo(const ANomeCampo: string): TJSONData;
+begin
+  Result := CampoInterno(Campos, ANomeCampo);
 end;
 
 function TZBoletoModeloBase.GeraCodigoBanco(const ANumero: string): string;
@@ -346,6 +369,18 @@ begin
   Prepara(ATipoModelo, AModelo);
 end;
 
+procedure TZBoletoBase.Prepara(const ATipoModelo, ATipoAnalisador: string; out
+  AAnalisador: TZBoletoAnalisadorBase);
+var
+  VModelo: TZBoletoModeloBase = nil;
+begin
+  try
+    Prepara(ATipoModelo, ATipoAnalisador, VModelo, AAnalisador);
+  finally
+    FreeAndNil(VModelo);
+  end;
+end;
+
 function TZBoletoBase.Executa(const ATipoModelo, ATipoAnalisador: string;
   out AModelo: TZBoletoModeloBase; out AAnalisador: TZBoletoAnalisadorBase): string;
 begin
@@ -363,6 +398,33 @@ begin
   finally
     FreeAndNil(VAnalisador);
     FreeAndNil(VModelo);
+  end;
+end;
+
+function TZBoletoBase.Executa(const ATipoModelo, ATipoAnalisador: string; out
+  AAnalisador: TZBoletoAnalisadorBase): string;
+var
+  VModelo: TZBoletoModeloBase;
+begin
+  try
+    Result := Executa(ATipoModelo, ATipoAnalisador, VModelo, AAnalisador);
+  finally
+    FreeAndNil(VModelo);
+  end;
+end;
+
+procedure TZBoletoBase.Executa(const ATipoModelo, ATipoAnalisador,
+  ANomeArquivo: string);
+var
+  VSaida: string;
+  VConteudo: TFileStream;
+begin
+  VSaida := Executa(ATipoModelo, ATipoAnalisador);
+  VConteudo := TFileStream.Create(ANomeArquivo, fmCreate);
+  try
+    VConteudo.Write(VSaida[1], Length(VSaida));
+  finally
+    VConteudo.Free;
   end;
 end;
 
