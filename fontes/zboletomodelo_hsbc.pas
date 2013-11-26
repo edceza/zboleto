@@ -107,7 +107,7 @@ function TZBoletoModeloHSBC.GeraNossoNumero(ANDoc, ACedente, ATipoId: string;
 begin
   ANDoc := ANDoc + Modulo11Invertido(ANDoc) + ATipoId;
   Result := ANDoc + Modulo11Invertido(IntToStr(StrToInt(ANDoc) +
-    StrToInt(ACedente) + StrToInt(FormatDateTime('ddmmyy', AVenc))));
+    StrToInt(ACedente) + StrToInt(FormatDateTime(FormatoData, AVenc))));
 end;
 
 procedure TZBoletoModeloHSBC.Prepara;
