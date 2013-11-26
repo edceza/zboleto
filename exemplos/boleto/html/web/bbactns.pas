@@ -55,7 +55,7 @@ begin
     Boleto.Campos.Add('instrucoes1', '- Sr. Caixa, cobrar multa de 2% após o vencimento');
     Boleto.Campos.Add('instrucoes2', '- Receber até 10 dias após o vencimento');
     Boleto.Campos.Add('instrucoes3', '- Em caso de dúvidas entre em contato conosco: xxxx@xxxx.com.br');
-    Boleto.Campos.Add('instrucoes4', '&nbsp; Emitido pelo sistema ZBoletoPhp - github.com/silvioprog/zboleto');
+    Boleto.Campos.Add('instrucoes4', '&nbsp; Emitido pelo sistema ZBoleto - github.com/silvioprog/zboleto');
 
     // DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
     Boleto.Campos.Add('quantidade', '10');
@@ -98,7 +98,7 @@ begin
     *)
 
     // SEUS DADOS
-    Boleto.Campos.Add('identificacao', 'BoletoPhp - Código Aberto de Sistema de Boletos');
+    Boleto.Campos.Add('identificacao', 'ZBoleto - Gerador de boletos bancários');
     Boleto.Campos.Add('cpf_cnpj', '');
     Boleto.Campos.Add('endereco', 'Coloque o endereço da sua empresa aqui');
     Boleto.Campos.Add('cidade_uf', 'Cidade / Estado');
