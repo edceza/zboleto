@@ -24,8 +24,40 @@ unit ZBoletoUteis;
 interface
 
 uses
-  ZBoletoCodBarras, Classes, StrUtils, SysUtils, Base64;
+  ZBoletoCodBarras, Classes, StrUtils, SysUtils, Base64, FPJSON;
 
+const
+  DataNula = 0;
+  CRLF = #13#10;
+  FormatoData = 'ddmmyy';
+
+resourcestring
+  STamanhoValor_Erro = 'Valor %s ultrapassa tamanho %d.';
+
+function Espacos(const AQuant: Integer): string;
+function Caractere(const S: string; const C: Char): Char;
+function Texto(const S, P: string): string;
+function CaractereJSON(AJSON: TJSONObject; const ACampo: string;
+  const C: Char): Char;
+function TextoJSON(AJSON: TJSONObject; const ACampo, S: string): string;
+function FloatJSON(AJSON: TJSONObject; const ACampo: string;
+  const V: Double): Double;
+function CurrJSON(AJSON: TJSONObject; const ACampo: string;
+  const V: Currency): Currency;
+function DataJSON(AJSON: TJSONObject; const ACampo: string;
+  const D: TDate): TDate;
+procedure ValidaTamVal(const AVal: string; const ATamanho: Integer);
+function FormataValor(const V: Double; const N: Integer): string;
+function FormataComZero(const S: string; const N: Integer): string;
+function FormataComEspaco(const S: string; const N: Integer): string;
+function FormataComEspacoR(const S: string; const N: Integer): string;
+function FormataData(const D: TDate): string;
+function LeInt(const S: string; const APos, ATamanho: Integer): Integer;
+function LeInt64(const S: string; const APos, ATamanho: Integer): Int64;
+function LeCurr(const S: string; const APos, ATamanho: Integer): Currency;
+function LeFloat(const S: string; const APos, ATamanho: Integer): Double;
+function LeStr(const S: string; const APos, ATamanho: Integer): string;
+function LeData(const S: string; const APos: Integer): TDate;
 function DataJuliano(const AData: TDate): string;
 function RemoveDiacriticos(const S: string): string;
 function RemoveCaractrsEspeciais(const S: string): string;
@@ -50,8 +82,158 @@ function StrBinParaHml(const ACod: string; const AAltura: Integer = 50): string;
 function CodBarras2de5ParaHml(const ACod: string;
   const AAltura: Integer = 50): string;
 function ExpandeDir(const S: string): string;
+function GeraCodigoAlfaNumerico(N: Integer): string;
 
 implementation
+
+function Espacos(const AQuant: Integer): string;
+begin
+  SetLength(Result, AQuant);
+  FillChar(Pointer(Result)^, Length(Result), #32);
+end;
+
+function Caractere(const S: string; const C: Char): Char;
+begin
+  if Trim(S) = '' then
+    Result := C
+  else
+    Result := PChar(S)^;
+end;
+
+function Texto(const S, P: string): string;
+begin
+  if Trim(S) = '' then
+    Result := P
+  else
+    Result := S;
+end;
+
+function CaractereJSON(AJSON: TJSONObject; const ACampo: string;
+  const C: Char): Char;
+var
+  VCampo: TJSONData;
+begin
+  VCampo := AJSON.Find(ACampo);
+  if Assigned(VCampo) then
+    Result := Caractere(VCampo.AsString, C)
+  else
+    Result := C;
+end;
+
+function TextoJSON(AJSON: TJSONObject; const ACampo, S: string): string;
+var
+  VCampo: TJSONData;
+begin
+  VCampo := AJSON.Find(ACampo);
+  if Assigned(VCampo) then
+    Result := Texto(VCampo.AsString, S)
+  else
+    Result := S;
+end;
+
+function FloatJSON(AJSON: TJSONObject; const ACampo: string;
+  const V: Double): Double;
+var
+  VCampo: TJSONData;
+begin
+  VCampo := AJSON.Find(ACampo);
+  if Assigned(VCampo) then
+    Result := VCampo.AsFloat
+  else
+    Result := V;
+end;
+
+function CurrJSON(AJSON: TJSONObject; const ACampo: string;
+  const V: Currency): Currency;
+var
+  VCampo: TJSONData;
+begin
+  VCampo := AJSON.Find(ACampo);
+  if Assigned(VCampo) then
+    Result := VCampo.AsFloat
+  else
+    Result := V;
+end;
+
+function DataJSON(AJSON: TJSONObject; const ACampo: string;
+  const D: TDate): TDate;
+var
+  VCampo: TJSONData;
+begin
+  VCampo := AJSON.Find(ACampo);
+  if Assigned(VCampo) then
+    Result := VCampo.AsFloat
+  else
+    Result := D;
+end;
+
+procedure ValidaTamVal(const AVal: string; const ATamanho: Integer);
+begin
+  if Length(AVal) > ATamanho then
+    raise Exception.CreateFmt(STamanhoValor_Erro, [AVal, ATamanho]);
+end;
+
+function FormataValor(const V: Double; const N: Integer): string;
+begin
+  Result := AddChar('0', IntToStr(Round(V) * 100), N);
+  ValidaTamVal(Result, N);
+end;
+
+function FormataComZero(const S: string; const N: Integer): string;
+begin
+  Result := AddChar('0', S, N);
+  ValidaTamVal(Result, N);
+end;
+
+function FormataComEspaco(const S: string; const N: Integer): string;
+begin
+  Result := AddChar(' ', S, N);
+  ValidaTamVal(Result, N);
+end;
+
+function FormataComEspacoR(const S: string; const N: Integer): string;
+begin
+  Result := AddCharR(' ', S, N);
+  ValidaTamVal(Result, N);
+end;
+
+function FormataData(const D: TDate): string;
+begin
+  Result := FormatDateTime(FormatoData, D);
+  ValidaTamVal(Result, 6);
+end;
+
+function LeInt(const S: string; const APos, ATamanho: Integer): Integer;
+begin
+  Result := StrToIntDef(Trim(Copy(S, APos, ATamanho)), 0);
+end;
+
+function LeInt64(const S: string; const APos, ATamanho: Integer): Int64;
+begin
+  Result := StrToInt64Def(Trim(Copy(S, APos, ATamanho)), 0);
+end;
+
+function LeCurr(const S: string; const APos, ATamanho: Integer): Currency;
+begin
+  Result := StrToCurrDef(Trim(Copy(S, APos, ATamanho)), 0) / 100;
+end;
+
+function LeFloat(const S: string; const APos, ATamanho: Integer): Double;
+begin
+  Result := StrToFloatDef(Trim(Copy(S, APos, ATamanho)), 0) / 100;
+end;
+
+function LeStr(const S: string; const APos, ATamanho: Integer): string;
+begin
+  Result := Trim(Copy(S, APos, ATamanho));
+end;
+
+function LeData(const S: string; const APos: Integer): TDate;
+begin
+  TryStrToDate(Copy(S, APos, 2) + DefaultFormatSettings.DateSeparator +
+    Copy(S, APos + 2, 2) + DefaultFormatSettings.DateSeparator +
+    Copy(S, APos + 4, 2), Result, FormatoData);
+end;
 
 function DataJuliano(const AData: TDate): string;
 var
@@ -394,6 +576,13 @@ end;
 function ExpandeDir(const S: string): string;
 begin
   Result := ExtractFilePath(ExpandFileName(S));
+end;
+
+function GeraCodigoAlfaNumerico(N: Integer): string;
+begin
+  if N > 1295 then
+    raise Exception.Create('Impossível gerar sequencia para número maior que 1295.');
+  Result := Dec2Numb(N, 2 { 2 dígitos }, 36);
 end;
 
 end.
