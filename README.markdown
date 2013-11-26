@@ -111,7 +111,7 @@ end.
 
 ##EXEMPLOS
 
-Se você deseja ver o ZBoleto em ação, então aprecie alguns demos online [aqui](http://brookframework.org/plugins/zboleto/exemplos.html).
+Se você deseja ver o ZBoleto em ação, então aprecie alguns demos online [aqui](https://dl.dropboxusercontent.com/u/135304375/zboleto/exemplos.html).
 
 ##SUPORTE, BUGS, CONTATO
 
