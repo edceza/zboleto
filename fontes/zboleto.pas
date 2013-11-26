@@ -33,6 +33,8 @@ type
 
   TZClasseBoletoAnalisadorBase = class of TZBoletoAnalisadorBase;
 
+  TZBoletoTipoCNAB = (tc240, tc400);
+
   { TZBoletoModeloBase }
 
   TZBoletoModeloBase = class(TComponent)
@@ -48,6 +50,8 @@ type
     FContaCedente: string;
     FContaCedenteDV: string;
     FContaDV: string;
+    FDirArquivosRemessa: string;
+    FDirArquivosRetorno: string;
     FDV: string;
     FFatorVencimento: string;
     FNomeBanco: string;
@@ -57,7 +61,7 @@ type
   protected
     procedure ChecaParametroInterno(AObject: TObject);
     function CampoInterno(ACampos: TJSONObject;
-      const ANomeCampo: string): TJSONData;
+      const ANomeCampo: string): TJSONData; overload;
   public
     constructor Create(ACampos: TJSONObject; AOwner: TComponent); reintroduce;
     class procedure Registra;
@@ -66,6 +70,20 @@ type
     class function TipoModelo: string; virtual;
     function Campo(const ANomeCampo: string): TJSONData;
     function GeraCodigoBanco(const ANumero: string): string; virtual;
+    function GeraNomeArquivoRemessa: string; virtual;
+    function GeraSequenciaArquivo: Integer; virtual;
+    function GeraHeaderRemessa(ACampos: TJSONObject;
+      {%H-}const ATipoCNAB: TZBoletoTipoCNAB): string; virtual;
+    function GeraDetalhesRemessa(ACampos: TJSONArray;
+      {%H-}const ATipoCNAB: TZBoletoTipoCNAB): string; virtual;
+    function GeraTraillerRemessa(ACampos: TJSONObject;
+      {%H-}const ATipoCNAB: TZBoletoTipoCNAB): string; virtual;
+    procedure GeraHeaderRetorno(ADados: TStream; ACampos: TJSONObject;
+      {%H-}const ATipoCNAB: TZBoletoTipoCNAB); virtual;
+    procedure GeraDetalhesRetorno(ADados: TStream; AItens: TJSONArray;
+      {%H-}const ATipoCNAB: TZBoletoTipoCNAB); virtual;
+    procedure GeraTraillerRetorno(ADados: TStream; ACampos: TJSONObject;
+      {%H-}const ATipoCNAB: TZBoletoTipoCNAB); virtual;
     procedure Prepara; virtual; abstract;
     property Campos: TJSONObject read FCampos write FCampos;
     property CodigoBanco: string read FCodigoBanco write FCodigoBanco;
@@ -84,6 +102,8 @@ type
     property DV: string read FDV write FDV;
     property Codigo: string read FCodigo write FCodigo;
     property AgenciaCodigo: string read FAgenciaCodigo write FAgenciaCodigo;
+    property DirArquivosRemessa: string read FDirArquivosRemessa write FDirArquivosRemessa;
+    property DirArquivosRetorno: string read FDirArquivosRetorno write FDirArquivosRetorno;
   end;
 
   { TZBoletoAnalisadorBase }
@@ -192,6 +212,8 @@ constructor TZBoletoModeloBase.Create(ACampos: TJSONObject; AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FCampos := ACampos;
+  if FDirArquivosRemessa = '' then
+    FDirArquivosRemessa := ExtractFilePath(ParamStr(0));
   FCodigoBanco := SZBNaoImplementado_Info;
   FCodigoBancoComDV := SZBNaoImplementado_Info;
   FNomeBanco := SZBNaoImplementado_Info;
@@ -263,6 +285,89 @@ function TZBoletoModeloBase.GeraCodigoBanco(const ANumero: string): string;
 begin
   Result := Copy(ANumero, 1, 3);
   Result += '-' + Modulo11(Result);
+end;
+
+function TZBoletoModeloBase.GeraNomeArquivoRemessa: string;
+var
+  S: string;
+  I: Integer;
+begin
+  S := IncludeTrailingPathDelimiter(FDirArquivosRemessa) + 'CB' +
+    FormatDateTime('ddmm', Date);
+  for I := 0 to 1295 do
+  begin
+    Result := S + GeraCodigoAlfaNumerico(I) + '.REM';
+    if not FileExists(Result) then
+      Break;
+  end;
+end;
+
+function TZBoletoModeloBase.GeraSequenciaArquivo: Integer;
+var
+  I: Integer;
+  R: TSearchRec;
+  F: Boolean = False;
+begin
+  I := 0;
+  if FindFirst(IncludeTrailingPathDelimiter(FDirArquivosRemessa) + '*.REM',
+    faArchive, R) = 0 then
+    try
+      repeat
+        if ((R.Attr and faDirectory) <> faDirectory) and
+          (ExtractFileExt(R.Name) = '.REM') then
+        begin
+          F := True;
+          Inc(I);
+        end;
+      until FindNext(R) <> 0;
+      if F then
+        Inc(I);
+      Result := I;
+    finally
+      FindClose(R);
+    end;
+end;
+
+function TZBoletoModeloBase.GeraHeaderRemessa(ACampos: TJSONObject;
+  const ATipoCNAB: TZBoletoTipoCNAB): string;
+begin
+  ChecaParametroInterno(ACampos);
+  Result := SZBNaoImplementado_Info;
+end;
+
+function TZBoletoModeloBase.GeraDetalhesRemessa(ACampos: TJSONArray;
+  const ATipoCNAB: TZBoletoTipoCNAB): string;
+begin
+  ChecaParametroInterno(ACampos);
+  Result := SZBNaoImplementado_Info;
+end;
+
+function TZBoletoModeloBase.GeraTraillerRemessa(ACampos: TJSONObject;
+  const ATipoCNAB: TZBoletoTipoCNAB): string;
+begin
+  ChecaParametroInterno(ACampos);
+  Result := SZBNaoImplementado_Info;
+end;
+
+procedure TZBoletoModeloBase.GeraHeaderRetorno(ADados: TStream;
+  ACampos: TJSONObject; const ATipoCNAB: TZBoletoTipoCNAB);
+begin
+  ChecaParametroInterno(ADados);
+  ChecaParametroInterno(ACampos);
+end;
+
+procedure TZBoletoModeloBase.GeraDetalhesRetorno(ADados: TStream;
+  AItens: TJSONArray; const ATipoCNAB: TZBoletoTipoCNAB);
+begin
+  ChecaParametroInterno(ADados);
+  ChecaParametroInterno(AItens);
+end;
+
+procedure TZBoletoModeloBase.GeraTraillerRetorno(ADados: TStream;
+  ACampos: TJSONObject; const ATipoCNAB: TZBoletoTipoCNAB);
+begin
+  ChecaParametroInterno(ADados);
+  ChecaParametroInterno(ACampos);
 end;
 
 { TZBoletoAnalisadorBase }
