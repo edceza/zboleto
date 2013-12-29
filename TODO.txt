@@ -1,3 +1,0 @@
-. Gerar arquivo de remessa;
-. Ler arquivo de retorno;
-. Implementar modelos para outros bancos;
